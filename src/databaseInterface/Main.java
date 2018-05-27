@@ -8,17 +8,13 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -78,7 +74,8 @@ public class Main extends Application {
                 final int j = i;                
                 TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i+1));
                 col.setCellValueFactory(new Callback<CellDataFeatures<ObservableList,String>,ObservableValue<String>>(){                    
-                    public ObservableValue<String> call(CellDataFeatures<ObservableList, String> param) {                                                                                              
+                    @Override
+					public ObservableValue<String> call(CellDataFeatures<ObservableList, String> param) {                                                                                              
                         return new SimpleStringProperty(param.getValue().get(j).toString());                        
                     }                    
                 });
