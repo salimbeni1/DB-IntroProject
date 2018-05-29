@@ -9,13 +9,19 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
 import java.sql.*;
@@ -26,16 +32,67 @@ public class Main extends Application {
     private ObservableList<ObservableList> data;
     private TableView tableview;
     
-    private String q0 = "SELECT cl.CLIPTITLE, rt.RUNNINGTIME " + 
-      		"FROM CLIPS cl, RELEASEDDATES rl, RUNNINGTIMES rt " + 
-      		"where rl.RELEASECOUNTRY = 'France' AND rl.CLIPID = cl.CLIPID AND rt.CLIPID = cl.CLIPID and ROWNUM <= 10 " + 
-      		"ORDER BY rt.RUNNINGTIME DESC";
+    private String qa = "SELECT cl.CLIPTITLE, rt.RUNNINGTIME " + 
+    		"FROM  CLIPS cl, RUNNINGTIMES rt " + 
+    		"where rt.RELEASECOUNTRY = 'France' AND rt.CLIPID = cl.CLIPID " + 
+    		"ORDER BY rt.RUNNINGTIME DESC " + 
+    		"FETCH FIRST 10 ROWS ONLY ";
     
-    private String q1 = "SELECT S.* FROM ACTED S WHERE S.ACTEDID = '2' OR S.actedid = 10 OR S.actedid = 30";
+    private String qb = "SELECT COUNT(*) " + 
+    		"FROM RELEASEDDATES rl " + 
+    		"WHERE EXTRACT(YEAR FROM rl.RELEASEDATE) = 2001 " + 
+    		"GROUP BY rl.RELEASECOUNTRY ";
     
-    private String q2 = "SELECT S.* FROM ACTED S WHERE S.ACTEDID = '2'";
+    private String qc = "SELECT COUNT(*), gr.GENRE " + 
+    		"FROM RELEASEDDATES rl, GENRES gr " + 
+    		"WHERE rl.RELEASECOUNTRY = 'USA' and EXTRACT(YEAR FROM rl.RELEASEDATE) >= 2013 and gr.CLIPID = rl.CLIPID " + 
+    		"GROUP BY gr.GENRE ";
     
-    private String querries[] = {q0, q1, q2};
+    private String qd = "WITH TEMP as (SELECT ac.PERSONID, COUNT(DISTINCT(ac.CLIPID)) as CNT " + 
+    		"              FROM ACTED ac " + 
+    		"              GROUP BY ac.PERSONID " + 
+    		"              ORDER BY CNT DESC " + 
+    		"              FETCH FIRST 1 ROW ONLY) " + 
+    		"SELECT pp.FULLNAME, tmp.CNT " + 
+    		"FROM TEMP tmp, PEOPLE pp " + 
+    		"WHERE pp.PERSONID = tmp.PERSONID ";
+    
+    private String qe = "SELECT MAX(COUNT(DISTINCT(di.CLIPID))) AS CNT " + 
+    		"FROM DIRECTED di " + 
+    		"GROUP BY di.PERSONID ";
+    
+    private String qf = "WITH TEMP AS (SELECT uni.PERSONID, uni.CLIPID, COUNT(uni.PERSONID) AS CNT " + 
+    		"              FROM (SELECT DISTINCT PERSONID, CLIPID FROM PRODUCED " + 
+    		"                    UNION ALL " + 
+    		"                    SELECT DISTINCT PERSONID, CLIPID FROM WROTE " + 
+    		"                    UNION ALL " + 
+    		"                    SELECT DISTINCT PERSONID, CLIPID FROM ACTED " + 
+    		"                    UNION ALL" + 
+    		"                    SELECT DISTINCT PERSONID, CLIPID FROM DIRECTED) uni " + 
+    		"              GROUP BY uni.PERSONID, uni.CLIPID)" + 
+    		"SELECT DISTINCT(pp.FULLNAME) " + 
+    		"FROM TEMP tmp, PEOPLE pp " + 
+    		"WHERE pp.PERSONID = tmp.PERSONID AND tmp.CNT >= 2 " + 
+    		"FETCH FIRST 10 ROWS ONLY ";
+    
+    private String qg = "SELECT ln.LANGUAGE, COUNT(ln.LANGUAGE) " + 
+    		"FROM LANGUAGES ln " + 
+    		"GROUP BY ln.LANGUAGE " + 
+    		"ORDER BY COUNT(ln.LANGUAGE) DESC " + 
+    		"FETCH FIRST 10 ROWS ONLY ";
+    
+    private String qh = "WITH TEMP AS (SELECT ac.PERSONID, COUNT(DISTINCT(ac.CLIPID)) as CNT " + 
+    		"              FROM ACTED ac, CLIPS cl " + 
+    		"              WHERE ac.CLIPID = cl.CLIPID AND cl.CLIPTYPE = 'TV' " + 
+    		"              GROUP BY ac.PERSONID " + 
+    		"              ORDER BY CNT DESC " + 
+    		"              FETCH FIRST 1 ROW ONLY) " + 
+    		"SELECT pp.FULLNAME, tmp.CNT " + 
+    		"FROM TEMP tmp, PEOPLE pp " + 
+    		"WHERE tmp.PERSONID = pp.PERSONID ";
+    
+    
+    private String querries[] = {qa, qb, qc, qd, qe, qf , qg , qh};
 
     //MAIN EXECUTOR
     public static void main(String[] args) {
@@ -111,10 +168,46 @@ public class Main extends Application {
 	@Override
     public void start(Stage mainStage) throws Exception {
 		
+		
+		
+		// allow to close all windows from the main window
+		mainStage.setOnCloseRequest((new EventHandler<WindowEvent>(){
+
+	        @Override
+	        public void handle(WindowEvent arg0) {
+	        	Platform.exit();
+	        }
+		}));
+		
+		
+		
+		
+		
+		
 		mainStage.setTitle("DB-P Team35");
+		GridPane grid = new GridPane();
+		
+		try {
+		Image emoji = new Image(getClass().getResourceAsStream("pervertedEmoji.png"));
+		
+		
+		Label intro = new Label("  this is our wonderful GUI");
+		ImageView ivIntro = new ImageView(emoji);
+		ivIntro.setFitWidth(30);ivIntro.setFitHeight(30);
+		intro.setGraphic(ivIntro);
+		
+		grid.add(intro, 0, 1);
+		Text intro2 = new Text(" - first make sure u r conneted\n to our EPFL network :)");
+		grid.add(intro2, 0, 3);
+		
+		}catch(Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		// ---------PREDEFINED QUERRIES-------------------------------------------
 		
 		ChoiceBox cb = new ChoiceBox(FXCollections.observableArrayList(
-			    "A", "B", "C")
+			    "A", "B", "C", "D", "E", "F", "G", "H")
 			);
 		
 		
@@ -128,7 +221,6 @@ public class Main extends Application {
                 resultStage.setX(mainStage.getX()+mainStage.getWidth());
                 //TableView
                 tableview = new TableView();
-                System.out.println(cb.getSelectionModel().getSelectedIndex());
                 buildData(querries[cb.getSelectionModel().getSelectedIndex()]);
 
                 //Main Scene
@@ -139,27 +231,60 @@ public class Main extends Application {
             }
         });
 		
-        GridPane grid = new GridPane();
-        grid.add(new Label("Predefined Querries : "), 0, 0, 4 , 1);
-        grid.add(cb, 0, 1);
         
-        /*
-        grid.add(new Label("Personalised Querries :"), 0, 3,4,1);
-        grid.add(new Label(" FROM : "), 0, 4);
-        grid.add(new ChoiceBox(), 1, 4);
-        grid.add(new Label(" WITH : "), 2, 4);
-        grid.add(new ChoiceBox(), 3, 4);*/
+        grid.add(new Label("Predefined Querries : "), 0, 10, 4 , 1);
+        grid.add(cb, 0, 11);
+        
+        // ----------------------------------------------------------------------
         
         
-        grid.add(new Label("Insert or delete :"), 0, 5,4,1);
-        grid.add(new Label(" TABLE: "), 0, 6);
-        grid.add(new ChoiceBox(), 1, 6);
-        grid.add(new Label(" WITH : "), 2, 6);
-        grid.add(new ChoiceBox(), 3, 6);
+        // ----------------- INSERT ---------------------------------------------
+        
+        
+        Button bt = new Button("Insert or Delete");
+        
+        bt.setOnAction(new EventHandler<ActionEvent>() {
+        	
+        	@Override
+            public void handle(ActionEvent event) {
+                Stage resultStage = new Stage();
+                resultStage.setTitle("Insert or Delete");
+                resultStage.setX(mainStage.getX()+mainStage.getWidth());
+                
+                GridPane insDel = new GridPane();
+                
+                insDel.add(new Text("insert the data u want to insert"),0,0);
+                
+                TextField entryTitle = new TextField();entryTitle.setPromptText("Forest Gump");
+                insDel.add(new Label("Clip Name"), 0, 2);
+                insDel.add(entryTitle, 1, 2);
+                
+                
+                
+                
+                
+                insDel.setHgap(3); 
+                insDel.setVgap(10); 
+                insDel.setPadding(new Insets(10, 10, 10, 10));
+                //Main Scene
+                Scene scene = new Scene(insDel);        
+                resultStage.setScene(scene);
+                resultStage.show();
+            }
+        	
+        });
+        
+        
+        grid.add(new Label("Advanced settings : "), 0, 15,4,1);
+        grid.add(bt, 0,16,4,1);
+        
+        // ----------------------------------------------------------------------
         
         grid.setHgap(3); 
         grid.setVgap(10); 
         grid.setPadding(new Insets(10, 10, 10, 10));
+        
+        
         
 	    mainStage.setScene(new Scene(grid));
 	    mainStage.show();
