@@ -469,7 +469,7 @@ public class Main extends Application {
                 
                 ArrayList<TextField> allCountries = new ArrayList();
                 
-                insDel.add(new Label("nb Country "), 0, 11);
+                insDel.add(new Label("nb parti. from "), 0, 11);
                 TextField countryNb = new TextField("0");countryNb.setPromptText("1");
                 countryNb.setOnKeyPressed(new EventHandler<KeyEvent>()
                 {
@@ -513,6 +513,28 @@ public class Main extends Application {
                 ArrayList<TextField> allPTradeMark = new ArrayList();
                 ArrayList<TextField> allPWRTfrom = new ArrayList();
                 
+                ArrayList<ArrayList<TextField> > allPDirectedRoles = new ArrayList();
+                ArrayList<ArrayList<TextField> > allPDirectedAddInfo = new ArrayList();
+                ArrayList<ArrayList<TextField> > allPDirectedClip = new ArrayList();
+                ArrayList<ArrayList<TextField> > allPproducedRoles = new ArrayList();
+                ArrayList<ArrayList<TextField> > allPproducedAddInfo = new ArrayList();
+                ArrayList<ArrayList<TextField> > allPproducedClip = new ArrayList();
+                ArrayList<ArrayList<TextField> > allPactedChar = new ArrayList();
+                ArrayList<ArrayList<TextField> > allPactedAddInfo = new ArrayList();
+                ArrayList<ArrayList<TextField> > allPactedOrderCredit = new ArrayList();
+                ArrayList<ArrayList<TextField> > allPactedClip = new ArrayList();
+                ArrayList<ArrayList<TextField> > allPwriterWT = new ArrayList();
+                ArrayList<ArrayList<TextField> > allPwriterAddInfo = new ArrayList();
+                ArrayList<ArrayList<TextField> > allPwriterRole = new ArrayList();
+                ArrayList<ArrayList<TextField> > allPwriterClip = new ArrayList();
+                
+                
+                
+                
+                
+                
+                
+                
                 
                 insDel.add(new Label("nb People "), 0, 12);
                 TextField peopleNb = new TextField("0");peopleNb.setPromptText("1");
@@ -527,6 +549,8 @@ public class Main extends Application {
                             for(int i = 0; i < nbPeople;++i) {
 	                        	Stage peopleStage = new Stage();
 	                        	peopleStage.setTitle("PEOPLE");
+	                        	
+	                        	
 	                        	
 	                        	GridPane peopleGrid = new GridPane();
 	                        	
@@ -574,6 +598,201 @@ public class Main extends Application {
 	                            peopleGrid.add(new Label("from ? "), 0, 11);
 	                            peopleGrid.add(allPWRTfrom.get(i), 1, 11);
 	                            
+	                            peopleGrid.add(new Label("nb Directed "), 0, 12);
+	                            TextField directedNb = new TextField("0");directedNb.setPromptText("1");
+	                            directedNb.setOnKeyPressed(new EventHandler<KeyEvent>()
+	                            {
+	                                @Override
+	                                public void handle(KeyEvent ke)
+	                                {
+	                                    if (ke.getCode().equals(KeyCode.ENTER))
+	                                    {
+	                                    	
+	                                    	Stage directedStage = new Stage();
+	                                    	directedStage.setTitle("directed");
+	                                    	
+	                                    	GridPane directedGrid = new GridPane();
+	                                    	int nbdirected = Integer.parseInt(directedNb.getText());
+	                                    	
+	                                    	allPDirectedRoles.add(new ArrayList());
+	        	                        	allPDirectedAddInfo.add(new ArrayList());
+	        	                        	allPDirectedClip.add(new ArrayList());
+	                                    	
+	                                        for(int k = 0; k < nbdirected;++k) {
+	                                        	allPDirectedAddInfo.get(allPDirectedAddInfo.size()-1).add(new TextField(""));
+	                                        	allPDirectedRoles.get(allPDirectedRoles.size()-1).add(new TextField(""));
+	                                        	allPDirectedClip.get(allPDirectedClip.size()-1).add(new TextField(""));
+	                                        	
+	                                        	directedGrid.add(new Label("AddInfo "), 0, 6+k*4);
+	                                        	directedGrid.add(allPDirectedAddInfo.get(allPDirectedAddInfo.size()-1).get(k), 1, 6+k*4);
+	                                        	
+	                                        	directedGrid.add(new Label("Role "), 0, 6+k*4+1);
+	                                        	directedGrid.add(allPDirectedRoles.get(allPDirectedRoles.size()-1).get(k), 1, 6+k*4+1);
+	                                        	
+	                                        	directedGrid.add(new Label("CLip "), 0, 6+k*4+2);
+	                                        	directedGrid.add(allPDirectedClip.get(allPDirectedClip.size()-1).get(k), 1, 6+k*4+2);
+	                                        	
+	                                        	directedGrid.add(new Label("- - - -"), 0, 6+k*4+3);
+	                                        	
+	                                        }
+	                                        Scene directedScene = new Scene(directedGrid);        
+	                                        directedStage.setScene(directedScene);
+	                                        directedStage.show();
+	                                    }
+	                                }
+	                            });
+	                            peopleGrid.add(directedNb, 1, 12);
+	                            
+	                            
+	                            peopleGrid.add(new Label("nb Produced "), 0, 13);
+	                            TextField producedNb = new TextField("0");producedNb.setPromptText("1");
+	                            producedNb.setOnKeyPressed(new EventHandler<KeyEvent>()
+	                            {
+	                                @Override
+	                                public void handle(KeyEvent ke)
+	                                {
+	                                    if (ke.getCode().equals(KeyCode.ENTER))
+	                                    {
+	                                    	
+	                                    	Stage producedStage = new Stage();
+	                                    	producedStage.setTitle("produced");
+	                                    	
+	                                    	GridPane producedGrid = new GridPane();
+	                                    	int nbproduced = Integer.parseInt(producedNb.getText());
+	                                    	
+	                                    	allPproducedRoles.add(new ArrayList());
+	        	                        	allPproducedAddInfo.add(new ArrayList());
+	        	                        	allPproducedClip.add(new ArrayList());
+	                                    	
+	                                        for(int k = 0; k < nbproduced;++k) {
+	                                        	allPproducedAddInfo.get(allPproducedAddInfo.size()-1).add(new TextField(""));
+	                                        	allPproducedRoles.get(allPproducedRoles.size()-1).add(new TextField(""));
+	                                        	allPproducedClip.get(allPproducedClip.size()-1).add(new TextField(""));
+	                                        	
+	                                        	producedGrid.add(new Label("AddInfo "), 0, 6+k*4);
+	                                        	producedGrid.add(allPproducedAddInfo.get(allPproducedAddInfo.size()-1).get(k), 1, 6+k*4);
+	                                        	
+	                                        	producedGrid.add(new Label("Role "), 0, 6+k*4+1);
+	                                        	producedGrid.add(allPproducedRoles.get(allPproducedRoles.size()-1).get(k), 1, 6+k*4+1);
+	                                        	
+	                                        	producedGrid.add(new Label("Clip "), 0, 6+k*4+2);
+	                                        	producedGrid.add(allPproducedClip.get(allPproducedClip.size()-1).get(k), 1, 6+k*4+2);
+	                                        	
+	                                        	producedGrid.add(new Label("- - - -"), 0, 6+k*4+3);
+	                                        	
+	                                        }
+	                                        Scene producedScene = new Scene(producedGrid);        
+	                                        producedStage.setScene(producedScene);
+	                                        producedStage.show();
+	                                    }
+	                                }
+	                            });
+	                            peopleGrid.add(producedNb, 1, 13);
+	                            
+	                            
+	                            peopleGrid.add(new Label("nb acted "), 0, 14);
+	                            TextField actedNb = new TextField("0");actedNb.setPromptText("1");
+	                            actedNb.setOnKeyPressed(new EventHandler<KeyEvent>()
+	                            {
+	                                @Override
+	                                public void handle(KeyEvent ke)
+	                                {
+	                                    if (ke.getCode().equals(KeyCode.ENTER))
+	                                    {
+	                                    	
+	                                    	Stage actedStage = new Stage();
+	                                    	actedStage.setTitle("acted");
+	                                    	
+	                                    	GridPane actedGrid = new GridPane();
+	                                    	int nbacted = Integer.parseInt(actedNb.getText());
+	                                    	
+	                                    	allPactedChar.add(new ArrayList());
+	        	                        	allPactedAddInfo.add(new ArrayList());
+	        	                        	allPactedOrderCredit.add(new ArrayList());
+	        	                        	allPactedClip.add(new ArrayList());
+	                                    	
+	                                        for(int k = 0; k < nbacted;++k) {
+	                                        	allPactedAddInfo.get(allPactedAddInfo.size()-1).add(new TextField(""));
+	                                        	allPactedChar.get(allPactedChar.size()-1).add(new TextField(""));
+	                                        	allPactedOrderCredit.get(allPactedOrderCredit.size()-1).add(new TextField(""));
+	                                        	allPactedClip.get(allPactedClip.size()-1).add(new TextField(""));
+	                                        	
+	                                        	actedGrid.add(new Label("AddInfo "), 0, 6+k*5);
+	                                        	actedGrid.add(allPactedAddInfo.get(allPactedAddInfo.size()-1).get(k), 1, 6+k*5);
+	                                        	
+	                                        	actedGrid.add(new Label("Role "), 0, 6+k*5+1);
+	                                        	actedGrid.add(allPactedChar.get(allPactedChar.size()-1).get(k), 1, 6+k*5+1);
+	                                        	
+	                                        	actedGrid.add(new Label("Order Credit "), 0, 6+k*5+2);
+	                                        	actedGrid.add(allPactedOrderCredit.get(allPactedOrderCredit.size()-1).get(k), 1, 6+k*5+2);
+	                                        	
+	                                        	actedGrid.add(new Label("Clip "), 0, 6+k*5+3);
+	                                        	actedGrid.add(allPactedClip.get(allPactedClip.size()-1).get(k), 1, 6+k*5+3);
+	                                        	
+	                                        	
+	                                        	actedGrid.add(new Label("- - - -"), 0, 6+k*5+4);
+	                                        	
+	                                        }
+	                                        Scene actedScene = new Scene(actedGrid);        
+	                                        actedStage.setScene(actedScene);
+	                                        actedStage.show();
+	                                    }
+	                                }
+	                            });
+	                            peopleGrid.add(actedNb, 1, 14);
+	                            
+	                            
+	                            peopleGrid.add(new Label("nb writer "), 0, 15);
+	                            TextField writerNb = new TextField("0");writerNb.setPromptText("1");
+	                            writerNb.setOnKeyPressed(new EventHandler<KeyEvent>()
+	                            {
+	                                @Override
+	                                public void handle(KeyEvent ke)
+	                                {
+	                                    if (ke.getCode().equals(KeyCode.ENTER))
+	                                    {
+	                                    	
+	                                    	Stage writerStage = new Stage();
+	                                    	writerStage.setTitle("writer");
+	                                    	
+	                                    	GridPane writerGrid = new GridPane();
+	                                    	int nbwriter = Integer.parseInt(writerNb.getText());
+	                                    	
+	                                    	allPwriterWT.add(new ArrayList());
+	        	                        	allPwriterAddInfo.add(new ArrayList());
+	        	                        	allPwriterRole.add(new ArrayList());
+	        	                        	allPwriterClip.add(new ArrayList());
+	                                    	
+	                                        for(int k = 0; k < nbwriter;++k) {
+	                                        	allPwriterWT.get(allPwriterWT.size()-1).add(new TextField(""));
+	                                        	allPwriterAddInfo.get(allPwriterAddInfo.size()-1).add(new TextField(""));
+	                                        	allPwriterRole.get(allPwriterRole.size()-1).add(new TextField("NULL"));
+	                                        	allPwriterClip.get(allPwriterClip.size()-1).add(new TextField("NULL"));
+	                                        	
+	                                        	writerGrid.add(new Label("work Type "), 0, 6+k*5);
+	                                        	writerGrid.add(allPwriterWT.get(allPwriterWT.size()-1).get(k), 1, 6+k*5);
+	                                        	
+	                                        	writerGrid.add(new Label("Add Info "), 0, 6+k*5+1);
+	                                        	writerGrid.add(allPwriterAddInfo.get(allPwriterAddInfo.size()-1).get(k), 1, 6+k*5+1);
+	                                        	
+	                                        	writerGrid.add(new Label("Roles "), 0, 6+k*5+2);
+	                                        	writerGrid.add(allPwriterRole.get(allPwriterRole.size()-1).get(k), 1, 6+k*5+2);
+	                                        	
+	                                        	writerGrid.add(new Label("Clip "), 0, 6+k*5+3);
+	                                        	writerGrid.add(allPwriterClip.get(allPwriterClip.size()-1).get(k), 1, 6+k*5+3);
+	                                        	
+	                                        	
+	                                        	writerGrid.add(new Label("- - - -"), 0, 6+k*5+4);
+	                                        	
+	                                        }
+	                                        Scene writerScene = new Scene(writerGrid);        
+	                                        writerStage.setScene(writerScene);
+	                                        writerStage.show();
+	                                    }
+	                                }
+	                            });
+	                            peopleGrid.add(writerNb, 1, 15);
+	                            
 
       	
 	                            
@@ -585,6 +804,145 @@ public class Main extends Application {
                     }
                 });
                 insDel.add(peopleNb, 1, 12);
+                
+                
+                Button insertBtn = new Button("INSERT");
+                insertBtn.setOnAction((e) -> {
+                	
+                	
+                	try{
+                    	  System.out.println("	- INTRO TO DATABSE -");
+                    	  Class.forName("oracle.jdbc.driver.OracleDriver");
+                    	  System.out.print("Database Connection : ");
+                    	  Connection con = DriverManager.getConnection(
+              					"jdbc:oracle:thin:@//diassrv2.epfl.ch:1521/orcldias.epfl.ch",
+              					"DB2018_G35",
+              					"DB2018_G35");
+                    	  System.out.println("OK");
+                    	  String insertSql = "";
+                    	  String clipID = " (SELECT MAX ( ClipID ) From Clips ) ";
+                	
+                	
+                	String insertSql0 = " INSERT INTO Clips (ClipID,ClipYear,ClipTitle,ClipType) ";
+                	      insertSql0 += " VALUES ( (SELECT MAX ( ClipID ) From Clips ) + 1 ,TO_DATE("+clipYear.getText()+",'YYYY') , '"+clipTitle.getText()+"' , '"+clipType.getText()+"' ) ";
+                	
+                	      
+                	      ResultSet rs0 = con.createStatement().executeQuery(insertSql0);
+                	      
+                	      
+                   
+                    
+                    
+                    
+                    
+                    
+                    for(int a = 0; a < allGenres.size(); ++a) {
+                    	insertSql += " INSERT INTO Genres ( Genre , ClipID ) ";
+                    	insertSql += " VALUES ( '"+allGenres.get(a).getText()+"' , " +clipID+" ) ";
+                    }
+                    
+                    
+                    
+                    for(int a = 0; a < allLanguage.size(); ++a) {
+                    	insertSql += " INSERT INTO Languages (Language,ClipID) ";
+                    	insertSql += " VALUES ( '"+allLanguage.get(a).getText()+"' ," +clipID+" ) ";
+                    }
+                    
+                    
+                    for(int a = 0; a < allRTCountryNames.size(); ++a) {
+                    	insertSql += " INSERT INTO RunningTimes ( RunningTime , ReleaseCountry , ClipID ) ";
+                    	insertSql += " VALUES ( "+Integer.toString(Integer.getInteger(allRTRunningTime.get(a).getText()))+",'"+allRTCountryNames.get(a).getText()+"' ," +clipID+" ) ";
+                    	
+                    	
+                    	insertSql += " INSERT INTO Countries (CountryName) ";
+                    	insertSql += " VALUES ( '"+ allRTCountryNames.get(a).getText()+"' ) ";
+                    }
+                    
+                    for(int a = 0; a < allRICountryNames.size(); ++a) {
+                    	insertSql += " INSERT INTO Releaseddates ( CountryName , ReleaseDate , ClipID ) ";
+                    	insertSql += " VALUES ( "+allRICountryNames.get(a).getText()+", TO_DATE("+allRIReleaseDate.get(a).getText()+",'dd.MM.YYYY') ," +clipID+" ) ";
+                    	
+                    	insertSql += " INSERT INTO Countries (CountryName) ";
+                    	insertSql += " VALUES ( '"+ allRICountryNames.get(a).getText()+"' ) ";
+                    }
+                    
+                    for(int a = 0; a < allLinkClip.size(); ++a) {
+                    	insertSql += " INSERT INTO Link ( linkType , ClipTo , ClipFrom ) ";
+                    	insertSql += " VALUES ( '"+allLinkType.get(a).getText()+"' , "+allLinkClip.get(a).getText()+" , " +clipID+" ) ";
+                    }
+                    
+                    
+                    for(int a = 0; a < allCountries.size(); ++a) {
+                    	insertSql += " INSERT INTO RecievedPArticipationFrom ( CountryName , ClipID ) ";
+                    	insertSql += " VALUES ( '"+allCountries.get(a).getText()+"' ," +clipID+" ) ";
+                    	
+                    	
+                    	insertSql += " INSERT INTO Countries (CountryName) ";
+                    	insertSql += " VALUES ( '"+ allCountries.get(a).getText()+"' )";
+                    }
+                    
+                    System.out.println(insertSql);
+                    
+                    ResultSet rs1 = con.createStatement().executeQuery(insertSql);
+                    
+                    // -- people 
+                    
+                    for(int i = 0 ; i < allPNames.size();++i) {
+                    	
+                    String insertSql2 = " INSERT INTO People (PersonID,FullName) ";
+              	    insertSql2 += " VALUES ( (SELECT MAX ( PersonID ) From People ) + 1 , '"
+              	    		   +allPNames.get(i).getText()+"' ) ";
+              	    
+              	  System.out.println(insertSql2);
+              	    ResultSet rs2 = con.createStatement().executeQuery(insertSql2);
+              	    
+              	  String insertSql3 = "";
+            	  String personID = " (SELECT MAX ( PersonID ) From People ) ";
+            	  
+            	  
+            	  insertSql3 += "INSERT INTO Biography (PersonID,DateAndPlaceOfBirth,Height,Biography, biographer,"
+            	  				+ "dateandcauseofdeath,trivia,personalQuotes,tradeMArk,wherearetheynow) ";
+            	  insertSql3 += "VALUES ("+personID+                      ",'"
+            			  				+allPDPofBirth.get(i).getText() +"','"+allPHeight.get(i).getText()+        "','"
+            			  				+allPBiography.get(i).getText()+ "','"+allPBiographer.get(i).getText()+    "','"
+            			  				+allPDCofDeath.get(i).getText()+ "','"+allPTrivia+                         "','"
+            			  				+allPQuotes.get(i).getText()+    "','"+allPTradeMark.get(i).getText()+     "','"
+            			  				+ allPWRTfrom.get(i).getText()+  "') ";
+            	  
+            	  
+              	  
+              	    
+            	  System.out.println(insertSql3);
+            	  ResultSet rs3 = con.createStatement().executeQuery(insertSql3);
+                    	
+                    	
+                    	
+                    }
+                    
+                    
+                    
+                    
+                  	  
+                  	
+                  	
+                  	System.out.println(insertSql);
+                  	
+                    }catch(Exception f){
+                    	
+                        System.out.println("Error : "+f.getMessage());             
+                    }
+                    
+                    
+                    
+                    
+                
+                	
+                
+                });
+                
+                
+                
+                insDel.add(insertBtn,0,15,2,2);
                 
                 
                 
