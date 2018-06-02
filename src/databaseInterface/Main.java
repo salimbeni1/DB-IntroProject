@@ -162,6 +162,7 @@ public class Main extends Application {
 		}));
 
 		mainStage.setTitle("DB-P Team35");
+		
 		GridPane grid = new GridPane();
 		grid.getColumnConstraints().add(new ColumnConstraints(150));
 		grid.getColumnConstraints().add(new ColumnConstraints(100));
@@ -231,18 +232,24 @@ public class Main extends Application {
 			}
 		});
 
-		grid.add(new Label("Predefined Querries Part 2 : "), 0, 7, 4, 1);
-		grid.add(queryBtn, 1, 8, 2, 1);
-		grid.add(cb, 0, 8, 2, 2);
-		grid.add(new Label("Predefined Querries Part 3 : "), 0, 11, 4, 1);
-		grid.add(cb2, 0, 12, 2, 2);
-		grid.add(queryBtn2, 1, 12, 2, 1);
+		grid.add(new Label("Predefined Querries Part 2 : "), 0, 7, 2, 1);
+		
+		GridPane group1 = new GridPane();group1.setHgap(10);
+		group1.add(cb, 0, 0);
+		group1.add(queryBtn, 1, 0);
+		grid.add(group1, 0, 8, 2, 1);
+		
+		grid.add(new Label("Predefined Querries Part 3 : "), 0, 11, 2, 1);
+		GridPane group2 = new GridPane();group2.setHgap(10);
+		group2.add(cb2, 0, 0);
+		group2.add(queryBtn2, 1, 0);
+		grid.add(group2, 0, 12, 2, 1);
 
 		// ----------------------------------------------------------------------
 
 		// ----------------- INSERT ---------------------------------------------
 
-		Button bt = new Button("Insert | Delete | Global Search");
+		Button bt = new Button("Insert Delete");
 
 		bt.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -1362,7 +1369,7 @@ public class Main extends Application {
 				GridPane grouper = new GridPane();
 				grouper.add(insertBtn, 0, 1);
 				grouper.add(deleteBtn, 1, 1);
-				grouper.add(new Button("SEARCH"), 2, 1);
+				//grouper.add(new Button("SEARCH"), 2, 1);
 				grouper.setHgap(10);
 				
 				insDel.add(grouper, 0, 15,2,1);
@@ -1378,8 +1385,20 @@ public class Main extends Application {
 
 		});
 
-		grid.add(new Label("Advanced settings : "), 0, 15, 4, 1);
-		grid.add(bt, 0, 16, 4, 1);
+		grid.add(new Label("Advanced settings : "), 0, 15, 2, 1);
+		
+		
+		Button gSearch = new Button("SEARCH");
+		// TODO : gsearch
+		
+		
+		
+		GridPane grouper = new GridPane();
+		grouper.add(bt, 0, 0);
+		grouper.add(gSearch, 1, 0);
+		grouper.setHgap(10);
+		
+		grid.add(grouper, 0, 16, 2, 1);
 
 		// ----------------------------------------------------------------------
 
@@ -1388,6 +1407,7 @@ public class Main extends Application {
 		grid.setPadding(new Insets(10, 10, 10, 10));
 
 		mainStage.setScene(new Scene(grid));
+		mainStage.setWidth(230);
 		mainStage.show();
 
 	}
