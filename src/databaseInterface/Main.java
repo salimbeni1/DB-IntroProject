@@ -22,6 +22,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -1389,7 +1390,40 @@ public class Main extends Application {
 		
 		
 		Button gSearch = new Button("SEARCH");
-		// TODO : gsearch
+		gSearch.setOnAction(e -> {
+			
+			Stage searchStage = new Stage();
+			
+			HBox divider = new HBox();
+			
+			GridPane clipsPane = new GridPane();
+			clipsPane.setHgap(3);
+			clipsPane.setVgap(10);
+			clipsPane.setPadding(new Insets(10, 10, 10, 10));
+			
+			
+			Button clipSearch = new Button("SEARCH");
+			clipsPane.add(new Text("Title searc"), 0, 0);
+			clipsPane.add(clipSearch, 0, 1);
+			
+			
+			GridPane personPane = new GridPane();
+			personPane.setHgap(3);
+			personPane.setVgap(10);
+			personPane.setPadding(new Insets(10, 10, 10, 10));
+			
+			Button personSearch = new Button("SEARCH");
+			personPane.add(new Text("Title search"), 0, 0);
+			personPane.add(personSearch, 0, 1);
+			
+			
+			
+			
+			divider.getChildren().addAll(clipsPane,personPane);
+			searchStage.setScene(new Scene(divider));
+			searchStage.show();
+			
+		});
 		
 		
 		
