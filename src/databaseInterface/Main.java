@@ -20,6 +20,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -64,19 +65,28 @@ public class Main extends Application {
     		"FROM DIRECTED di " + 
     		"GROUP BY di.PERSONID ";
     
-    private String qf = "WITH TEMP AS (SELECT uni.PERSONID, uni.CLIPID, COUNT(uni.PERSONID) AS CNT " + 
-    		"              FROM (SELECT DISTINCT PERSONID, CLIPID FROM PRODUCED " + 
-    		"                    UNION ALL " + 
-    		"                    SELECT DISTINCT PERSONID, CLIPID FROM WROTE " + 
-    		"                    UNION ALL " + 
-    		"                    SELECT DISTINCT PERSONID, CLIPID FROM ACTED " + 
-    		"                    UNION ALL" + 
-    		"                    SELECT DISTINCT PERSONID, CLIPID FROM DIRECTED) uni " + 
-    		"              GROUP BY uni.PERSONID, uni.CLIPID)" + 
-    		"SELECT DISTINCT(pp.FULLNAME) " + 
-    		"FROM TEMP tmp, PEOPLE pp " + 
-    		"WHERE pp.PERSONID = tmp.PERSONID AND tmp.CNT >= 2 " + 
-    		"FETCH FIRST 10 ROWS ONLY ";
+    private String qf = "WITH TEMP AS (SELECT DISTINCT(PERSONID)\r\n" + 
+    		"              FROM ((SELECT DISTINCT PRODUCED.PERSONID, PRODUCED.CLIPID FROM PRODUCED \r\n" + 
+    		"                    INNER JOIN ACTED ON (ACTED.PERSONID = PRODUCED.PERSONID) AND (ACTED.CLIPID = PRODUCED.CLIPID))\r\n" + 
+    		"                    UNION \r\n" + 
+    		"                    (SELECT DISTINCT PRODUCED.PERSONID, PRODUCED.CLIPID FROM PRODUCED\r\n" + 
+    		"                    INNER JOIN WROTE ON (WROTE.PERSONID = PRODUCED.PERSONID) AND (WROTE.CLIPID = PRODUCED.CLIPID))\r\n" + 
+    		"                    UNION\r\n" + 
+    		"                    (SELECT DISTINCT PRODUCED.PERSONID, PRODUCED.CLIPID FROM PRODUCED\r\n" + 
+    		"                    INNER JOIN DIRECTED ON (DIRECTED.PERSONID = PRODUCED.PERSONID) AND (DIRECTED.CLIPID = PRODUCED.CLIPID))\r\n" + 
+    		"                    UNION\r\n" + 
+    		"                    (SELECT DISTINCT WROTE.PERSONID, WROTE.CLIPID FROM WROTE\r\n" + 
+    		"                    INNER JOIN ACTED ON (ACTED.PERSONID = WROTE.PERSONID) AND (ACTED.CLIPID = WROTE.CLIPID))\r\n" + 
+    		"                    UNION\r\n" + 
+    		"                    (SELECT DISTINCT WROTE.PERSONID, WROTE.CLIPID FROM WROTE\r\n" + 
+    		"                    INNER JOIN DIRECTED ON (DIRECTED.PERSONID = WROTE.PERSONID) AND (DIRECTED.CLIPID = WROTE.CLIPID))\r\n" + 
+    		"                    UNION\r\n" + 
+    		"                    (SELECT DISTINCT DIRECTED.PERSONID, DIRECTED.CLIPID FROM DIRECTED\r\n" + 
+    		"                    INNER JOIN ACTED ON (ACTED.PERSONID = DIRECTED.PERSONID) AND (ACTED.CLIPID = DIRECTED.CLIPID))))\r\n" + 
+    		"SELECT pp.FULLNAME\r\n" + 
+    		"FROM TEMP tmp, PEOPLE pp\r\n" + 
+    		"WHERE pp.PERSONID = tmp.PERSONID\r\n" + 
+    		"FETCH FIRST 10 ROWS ONLY";
     
     private String qg = "SELECT ln.LANGUAGE, COUNT(ln.LANGUAGE) " + 
     		"FROM LANGUAGES ln " + 
@@ -96,15 +106,12 @@ public class Main extends Application {
     
     
     private String querries[] = {qa, qb, qc, qd, qe, qf , qg , qh};
+    private String queries2[] = Queries2.queries2;
 
     //MAIN EXECUTOR
     public static void main(String[] args) {
         launch(args);
     }
-    
-    
-    
-    
     
     
   //CONNECTION DATABASE
@@ -164,9 +171,6 @@ public class Main extends Application {
           }
       }
           
-    
-    
-
 	@SuppressWarnings("unchecked")
 	@Override
     public void start(Stage mainStage) throws Exception {
@@ -182,14 +186,10 @@ public class Main extends Application {
 	        }
 		}));
 		
-		
-		
-		
-		
-		
 		mainStage.setTitle("DB-P Team35");
 		GridPane grid = new GridPane();
-		
+		grid.getColumnConstraints().add(new ColumnConstraints(150));
+		grid.getColumnConstraints().add(new ColumnConstraints(100));
 		try {
 		Image emoji = new Image(getClass().getResourceAsStream("pervertedEmoji.png"));
 		
@@ -199,8 +199,8 @@ public class Main extends Application {
 		ivIntro.setFitWidth(30);ivIntro.setFitHeight(30);
 		intro.setGraphic(ivIntro);
 		
-		grid.add(intro, 0, 1);
-		Text intro2 = new Text(" - first make sure u r conneted\n to our EPFL network :)");
+		grid.add(intro, 0, 1,2,1);
+		Text intro2 = new Text(" - first make sure you are connected\n to our EPFL network :)");
 		grid.add(intro2, 0, 3);
 		
 		}catch(Exception e) {
@@ -209,20 +209,25 @@ public class Main extends Application {
 		
 		// ---------PREDEFINED QUERRIES-------------------------------------------
 		
-		ChoiceBox cb = new ChoiceBox(FXCollections.observableArrayList(
+		ChoiceBox<?> cb = new ChoiceBox<String>(FXCollections.observableArrayList(
 			    "A", "B", "C", "D", "E", "F", "G", "H")
 			);
 		
+		ChoiceBox<?> cb2 = new ChoiceBox<String>(FXCollections.observableArrayList(
+			    "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L")
+		);
 		
-        
-        cb.setOnAction(new EventHandler<ActionEvent>() {
- 
-            @Override
-            public void handle(ActionEvent event) {
+		Button queryBtn = new Button("GO");
+		Button queryBtn2 = new Button("GO");
+		
+		queryBtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
                 Stage resultStage = new Stage();
                 resultStage.setTitle("Result");
                 resultStage.setX(mainStage.getX()+mainStage.getWidth());
                 //TableView
+
                 tableview = new TableView();
                 buildData(querries[cb.getSelectionModel().getSelectedIndex()]);
 
@@ -231,12 +236,35 @@ public class Main extends Application {
 
                 resultStage.setScene(scene);
                 resultStage.show();
-            }
-        });
+            }	
+		});
 		
+		queryBtn2.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+                Stage resultStage = new Stage();
+                resultStage.setTitle("Result");
+                resultStage.setX(mainStage.getX()+mainStage.getWidth());
+                //TableView
+
+                tableview = new TableView();
+                buildData(queries2[cb2.getSelectionModel().getSelectedIndex()]);
+
+                //Main Scene
+                Scene scene = new Scene(tableview);        
+
+                resultStage.setScene(scene);
+                resultStage.show();
+            }	
+		});
+		
+		grid.add(new Label("Predefined Querries Part 2 : "), 0, 7, 4 , 1);
+        grid.add(queryBtn, 1,8,2,1);
+        grid.add(cb, 0, 8, 2,2);
+        grid.add(new Label("Predefined Querries Part 3 : "), 0, 11, 4 , 1);
+        grid.add(cb2, 0,12,2,2);
+        grid.add(queryBtn2, 1,12,2,1);
         
-        grid.add(new Label("Predefined Querries : "), 0, 10, 4 , 1);
-        grid.add(cb, 0, 11);
         
         // ----------------------------------------------------------------------
         
@@ -1182,5 +1210,6 @@ public class Main extends Application {
 	    mainStage.show();
       
     }
+	
 
 }
