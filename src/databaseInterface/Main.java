@@ -256,18 +256,18 @@ public class Main extends Application {
                 
                 GridPane insDel = new GridPane();
                 
-                insDel.add(new Text("insert the data u want to insert"),0,0,2,1);
+                insDel.add(new Text("insert the data you"),0,0,2,1);
                 
                 // -- Clip Table
                 TextField clipTitle = new TextField();clipTitle.setPromptText("Forest Gump");
-                insDel.add(new Label("Clip Title "), 0, 2);
+                insDel.add(new Label("Clip Title * "), 0, 2);
                 insDel.add(clipTitle, 1, 2);
                 
                 TextField clipYear = new TextField();clipYear.setPromptText("2001");
                 insDel.add(new Label("Clip Year "), 0, 3);
                 insDel.add(clipYear, 1, 3);
                 
-                TextField clipType = new TextField();clipType.setPromptText("Comedy");
+                TextField clipType = new TextField();clipType.setPromptText("TV");
                 insDel.add(new Label("Clip Type "), 0, 4);
                 insDel.add(clipType, 1, 4);
                 
@@ -528,9 +528,10 @@ public class Main extends Application {
                 ArrayList<ArrayList<TextField> > allPwriterRole = new ArrayList();
                 ArrayList<ArrayList<TextField> > allPwriterClip = new ArrayList();
                 
-                
-                
-                
+                TextField directedNb = new TextField("0");directedNb.setPromptText("1");
+                TextField actedNb = new TextField("0");actedNb.setPromptText("1");
+                TextField writerNb = new TextField("0");writerNb.setPromptText("1");
+                TextField producedNb = new TextField("0");producedNb.setPromptText("1");
                 
                 
                 
@@ -555,7 +556,7 @@ public class Main extends Application {
 	                        	GridPane peopleGrid = new GridPane();
 	                        	
 	                            allPNames.add(new TextField(""));
-	                            peopleGrid.add(new Label("Full Name "), 0, 1);
+	                            peopleGrid.add(new Label("Full Name *"), 0, 1);
 	                            peopleGrid.add(allPNames.get(i), 1, 1);
 	                            
 	                            allPRealName.add(new TextField(""));
@@ -599,7 +600,7 @@ public class Main extends Application {
 	                            peopleGrid.add(allPWRTfrom.get(i), 1, 11);
 	                            
 	                            peopleGrid.add(new Label("nb Directed "), 0, 12);
-	                            TextField directedNb = new TextField("0");directedNb.setPromptText("1");
+	                            
 	                            directedNb.setOnKeyPressed(new EventHandler<KeyEvent>()
 	                            {
 	                                @Override
@@ -629,8 +630,8 @@ public class Main extends Application {
 	                                        	directedGrid.add(new Label("Role "), 0, 6+k*4+1);
 	                                        	directedGrid.add(allPDirectedRoles.get(allPDirectedRoles.size()-1).get(k), 1, 6+k*4+1);
 	                                        	
-	                                        	directedGrid.add(new Label("CLip "), 0, 6+k*4+2);
-	                                        	directedGrid.add(allPDirectedClip.get(allPDirectedClip.size()-1).get(k), 1, 6+k*4+2);
+	                                        	//directedGrid.add(new Label("CLip "), 0, 6+k*4+2);
+	                                        	//directedGrid.add(allPDirectedClip.get(allPDirectedClip.size()-1).get(k), 1, 6+k*4+2);
 	                                        	
 	                                        	directedGrid.add(new Label("- - - -"), 0, 6+k*4+3);
 	                                        	
@@ -645,7 +646,7 @@ public class Main extends Application {
 	                            
 	                            
 	                            peopleGrid.add(new Label("nb Produced "), 0, 13);
-	                            TextField producedNb = new TextField("0");producedNb.setPromptText("1");
+	                            
 	                            producedNb.setOnKeyPressed(new EventHandler<KeyEvent>()
 	                            {
 	                                @Override
@@ -675,8 +676,8 @@ public class Main extends Application {
 	                                        	producedGrid.add(new Label("Role "), 0, 6+k*4+1);
 	                                        	producedGrid.add(allPproducedRoles.get(allPproducedRoles.size()-1).get(k), 1, 6+k*4+1);
 	                                        	
-	                                        	producedGrid.add(new Label("Clip "), 0, 6+k*4+2);
-	                                        	producedGrid.add(allPproducedClip.get(allPproducedClip.size()-1).get(k), 1, 6+k*4+2);
+	                                        	//producedGrid.add(new Label("Clip "), 0, 6+k*4+2);
+	                                        	//producedGrid.add(allPproducedClip.get(allPproducedClip.size()-1).get(k), 1, 6+k*4+2);
 	                                        	
 	                                        	producedGrid.add(new Label("- - - -"), 0, 6+k*4+3);
 	                                        	
@@ -691,7 +692,7 @@ public class Main extends Application {
 	                            
 	                            
 	                            peopleGrid.add(new Label("nb acted "), 0, 14);
-	                            TextField actedNb = new TextField("0");actedNb.setPromptText("1");
+	                            
 	                            actedNb.setOnKeyPressed(new EventHandler<KeyEvent>()
 	                            {
 	                                @Override
@@ -726,8 +727,8 @@ public class Main extends Application {
 	                                        	actedGrid.add(new Label("Order Credit "), 0, 6+k*5+2);
 	                                        	actedGrid.add(allPactedOrderCredit.get(allPactedOrderCredit.size()-1).get(k), 1, 6+k*5+2);
 	                                        	
-	                                        	actedGrid.add(new Label("Clip "), 0, 6+k*5+3);
-	                                        	actedGrid.add(allPactedClip.get(allPactedClip.size()-1).get(k), 1, 6+k*5+3);
+	                                        	//actedGrid.add(new Label("Clip "), 0, 6+k*5+3);
+	                                        	//actedGrid.add(allPactedClip.get(allPactedClip.size()-1).get(k), 1, 6+k*5+3);
 	                                        	
 	                                        	
 	                                        	actedGrid.add(new Label("- - - -"), 0, 6+k*5+4);
@@ -743,7 +744,7 @@ public class Main extends Application {
 	                            
 	                            
 	                            peopleGrid.add(new Label("nb writer "), 0, 15);
-	                            TextField writerNb = new TextField("0");writerNb.setPromptText("1");
+	                            
 	                            writerNb.setOnKeyPressed(new EventHandler<KeyEvent>()
 	                            {
 	                                @Override
@@ -766,10 +767,10 @@ public class Main extends Application {
 	                                        for(int k = 0; k < nbwriter;++k) {
 	                                        	allPwriterWT.get(allPwriterWT.size()-1).add(new TextField(""));
 	                                        	allPwriterAddInfo.get(allPwriterAddInfo.size()-1).add(new TextField(""));
-	                                        	allPwriterRole.get(allPwriterRole.size()-1).add(new TextField("NULL"));
-	                                        	allPwriterClip.get(allPwriterClip.size()-1).add(new TextField("NULL"));
+	                                        	allPwriterRole.get(allPwriterRole.size()-1).add(new TextField(""));
+	                                        	allPwriterClip.get(allPwriterClip.size()-1).add(new TextField(""));
 	                                        	
-	                                        	writerGrid.add(new Label("work Type "), 0, 6+k*5);
+	                                        	writerGrid.add(new Label("Work Types "), 0, 6+k*5);
 	                                        	writerGrid.add(allPwriterWT.get(allPwriterWT.size()-1).get(k), 1, 6+k*5);
 	                                        	
 	                                        	writerGrid.add(new Label("Add Info "), 0, 6+k*5+1);
@@ -778,8 +779,8 @@ public class Main extends Application {
 	                                        	writerGrid.add(new Label("Roles "), 0, 6+k*5+2);
 	                                        	writerGrid.add(allPwriterRole.get(allPwriterRole.size()-1).get(k), 1, 6+k*5+2);
 	                                        	
-	                                        	writerGrid.add(new Label("Clip "), 0, 6+k*5+3);
-	                                        	writerGrid.add(allPwriterClip.get(allPwriterClip.size()-1).get(k), 1, 6+k*5+3);
+	                                        	//writerGrid.add(new Label("Clip "), 0, 6+k*5+3);
+	                                        	//writerGrid.add(allPwriterClip.get(allPwriterClip.size()-1).get(k), 1, 6+k*5+3);
 	                                        	
 	                                        	
 	                                        	writerGrid.add(new Label("- - - -"), 0, 6+k*5+4);
@@ -810,134 +811,338 @@ public class Main extends Application {
                 insertBtn.setOnAction((e) -> {
                 	
                 	
-                	try{
-                    	  System.out.println("	- INTRO TO DATABSE -");
-                    	  Class.forName("oracle.jdbc.driver.OracleDriver");
-                    	  System.out.print("Database Connection : ");
-                    	  Connection con = DriverManager.getConnection(
-              					"jdbc:oracle:thin:@//diassrv2.epfl.ch:1521/orcldias.epfl.ch",
-              					"DB2018_G35",
-              					"DB2018_G35");
-                    	  System.out.println("OK");
-                    	  String insertSql = "";
-                    	  String clipID = " (SELECT MAX ( ClipID ) From Clips ) ";
+                try{
+                		 System.out.println("	- INTRO TO DATABASE -");
+                    	 Class.forName("oracle.jdbc.driver.OracleDriver");
+                    	 System.out.print("Database Connection : ");
+                    	 Connection con = DriverManager.getConnection(
+              				"jdbc:oracle:thin:@//diassrv2.epfl.ch:1521/orcldias.epfl.ch",
+              				"DB2018_G35",
+              				"DB2018_G35");
+                    	 System.out.println("OK");
+                    	 String insertSql = "";
+                    	 String clipID_query = " (SELECT MAX ( ClipID ) AS ClipMax From Clips ) ";
                 	
-                	
-                	String insertSql0 = " INSERT INTO Clips (ClipID,ClipYear,ClipTitle,ClipType) ";
-                	      insertSql0 += " VALUES ( (SELECT MAX ( ClipID ) From Clips ) + 1 ,TO_DATE("+clipYear.getText()+",'YYYY') , '"+clipTitle.getText()+"' , '"+clipType.getText()+"' ) ";
+                    	 
+                    	 String insertSql0 = " INSERT INTO Clips (ClipID,ClipYear,ClipTitle,ClipType) ";
+                	     insertSql0 += " VALUES ( (SELECT MAX ( ClipID ) From Clips ) + 1 ,TO_DATE("+clipYear.getText()+",'YYYY') , '"+clipTitle.getText()+"' , '"+clipType.getText()+"' ) ";
                 	
                 	      
-                	      ResultSet rs0 = con.createStatement().executeQuery(insertSql0);
-                	      
-                	      
-                   
+                	     //ResultSet rs0 = con.createStatement().executeQuery(insertSql0);
+                	     ResultSet rs_clipid = con.createStatement().executeQuery(clipID_query);
+                	     String clipID = "";
+                	     while (rs_clipid.next()) {
+                	    	 clipID = Integer.toString(rs_clipid.getInt("ClipMax"));
+                	     }
+                	     System.out.println(clipID);
+            	      
+                	    for(int a = 0; a < allGenres.size(); ++a) {
+		                    	insertSql += " INSERT INTO Genres ( Genre , ClipID ) ";
+		                    	insertSql += " VALUES ( '"+allGenres.get(a).getText()+"' , " +clipID+" ) ";
+                	    }
+	                    
+	                    for(int a = 0; a < allLanguage.size(); ++a) {
+	                    	insertSql += " INSERT INTO Languages (Language,ClipID) ";
+	                    	insertSql += " VALUES ( '"+allLanguage.get(a).getText()+"' ," +clipID+" ) ";
+	                    }
+	                    
+	                    for(int a = 0; a < allRTCountryNames.size(); ++a) {
+	                    	
+	                    	insertSql += "INSERT INTO countries (countryname) "
+	                    			+ "	SELECT * FROM (SELECT '"+allRTCountryNames.get(a).getText()+"' from dual) tmp "
+	                    			+ "WHERE NOT EXISTS (SELECT countryname "
+	                    			+ "					FROM countries "
+	                    			+ "					WHERE countryname = '"+allRTCountryNames.get(a).getText()+"')"
+	                    			+ "FETCH FIRST ROW ONLY";
+	                    	
+	                    	con.createStatement().executeQuery(insertSql);
+	                    	insertSql = "";
+	                    	
+	                    }
+	                    
+	                    for(int a = 0; a < allRTCountryNames.size(); ++a) {
+	                   
+	                    	insertSql += " INSERT INTO RunningTimes ( RunningTime , ReleaseCountry , ClipID ) ";
+	                    	insertSql += " VALUES ( "+allRTRunningTime.get(a).getText()+",'"+allRTCountryNames.get(a).getText()+"' ," +clipID+" ) ";
+	                    	
+	                    }
+                    
+	                    for(int a = 0; a < allRICountryNames.size(); ++a) {
+	                    	
+	                    	insertSql += "INSERT INTO countries (countryname) "
+	                    			+ "	SELECT * FROM (SELECT '"+allRICountryNames.get(a).getText()+"' from dual) tmp "
+	                    			+ "WHERE NOT EXISTS (SELECT countryname "
+	                    			+ "					FROM countries "
+	                    			+ "					WHERE countryname = '"+allRICountryNames.get(a).getText()+"')"
+	                    			+ "FETCH FIRST ROW ONLY";
+	                    	con.createStatement().executeQuery(insertSql);
+	                    	insertSql = "";
+	                    }
+	                    for(int a = 0; a < allRICountryNames.size(); ++a) {
+	                    	insertSql += " INSERT INTO Releaseddates ( ReleaseCountry , ReleaseDate , ClipID ) ";
+	                    	insertSql += " VALUES ( '"+allRICountryNames.get(a).getText()+"', TO_DATE('"+allRIReleaseDate.get(a).getText()+"','dd.MM.YYYY') ," +clipID+" ) ";
+	                    	
+	                    }
+                    
+	                    for(int a = 0; a < allLinkClip.size(); ++a) {
+	                    	insertSql += " INSERT INTO Link ( linkType , ClipTo , ClipFrom ) ";
+	                    	insertSql += " VALUES ( '"+allLinkType.get(a).getText()+"' , "+allLinkClip.get(a).getText()+" , " +clipID+" ) ";
+	                    }
                     
                     
+	                    for(int a = 0; a < allCountries.size(); ++a) {
+	                    	
+	                    	insertSql += "INSERT INTO countries (countryname) "
+	                    			+ "	SELECT * FROM (SELECT '"+allCountries.get(a).getText()+"' from dual) tmp "
+	                    			+ "WHERE NOT EXISTS (SELECT countryname "
+	                    			+ "					FROM countries "
+	                    			+ "					WHERE countryname = '"+allCountries.get(a).getText()+"')"
+	                    			+ "FETCH FIRST ROW ONLY";
+	                    	con.createStatement().executeQuery(insertSql);
+	                    	insertSql = "";
+	                    			
+	                    }
+	                    
+	                    for(int a = 0; a < allCountries.size(); ++a) {
+	                    	insertSql += " INSERT INTO ReceivedParticipationFrom ( CountryName , ClipID ) ";
+	                    	insertSql += " VALUES ( '"+allCountries.get(a).getText()+"' ," +clipID+" ) ";
+	                    	
+	                    }
                     
+	                    System.out.println(insertSql);
                     
+	                    //con.createStatement().executeQuery(insertSql);
                     
-                    for(int a = 0; a < allGenres.size(); ++a) {
-                    	insertSql += " INSERT INTO Genres ( Genre , ClipID ) ";
-                    	insertSql += " VALUES ( '"+allGenres.get(a).getText()+"' , " +clipID+" ) ";
-                    }
+	                    // People tables 
+	                    String query_people = "";
+
+	                    for(int i = 0 ; i < allPNames.size();++i) {
+	                    	
+	                    	String insertSql2 = " INSERT INTO People (PersonID,FullName) ";
+	                    	insertSql2 += " VALUES ( (SELECT MAX ( PersonID ) From People ) + 1 , '"
+	              	    		   +allPNames.get(i).getText()+"' ) ";
+	                    	ResultSet rs2 = con.createStatement().executeQuery(insertSql2);
+		              	    
+		              	  	System.out.println(insertSql2);
+		              	  	String personIDQuery = "(SELECT MAX ( PersonID ) AS MAXID From People )";
+		              	  	ResultSet rsPerson=con.createStatement().executeQuery(personIDQuery);
+		              	  	String personID="";
+		              	  	while (rsPerson.next()) {
+		              	  		personID = String.valueOf(rsPerson.getInt("MAXID"));
+		              	  	}
+
+		              	  	
+		              	  	// DirectedRole insert
+	                    	for(int j = 0 ; j < Integer.parseInt(directedNb.getText()) ; ++j) {
+	                    		
+	                    		int directedRoleID=-1;
+			                    String queryDirected = "SELECT DIRECTEDID FROM DIRECTEDROLE WHERE ";
+			                    String queryDirectedInsert = "";
+	                    		
+	                    		if(allPDirectedAddInfo.get(i).get(j).getText().isEmpty()) {
+	                    			queryDirected += "AddInfos IS NULL AND ";
+	                    		}else {
+	                    			queryDirected += "AddInfos = '" + allPDirectedAddInfo.get(i).get(j).getText() + "' AND ";
+	                    		}
+	                    		
+	                    		if(allPDirectedRoles.get(i).get(j).getText().isEmpty()) {
+	                    			queryDirected += "Roles IS NULL";
+	                    		} else {
+	                    			queryDirected += "Roles = '" + allPDirectedRoles.get(i).get(j).getText()+"'";
+	                    		}
+	                    		System.out.println(queryDirected);
+	                    		ResultSet rsD = con.createStatement().executeQuery(queryDirected);
+	                    		if (!rsD.isBeforeFirst() ) {    
+	                    		    ResultSet rsNew = con.createStatement().executeQuery("SELECT MAX ( DirectedID )+1 AS MAXID From DirectedRole");
+	                    		    while (rsNew.next()) {
+	                    				directedRoleID = rsNew.getInt("MAXID");
+	                       	     	}
+	                    		} else {
+	                    			while (rsD.next()) {
+	                    				directedRoleID = rsD.getInt("DIRECTEDID");
+	                       	     	}
+	                    		}
+	                    		
+	                    		queryDirectedInsert += " INSERT INTO DIRECTEDROLE (Roles,AddInfos,DirectedID) ";
+		                    	queryDirectedInsert += " VALUES ('" + allPDirectedRoles.get(i).get(j).getText()+"','" +allPDirectedAddInfo.get(i).get(j).getText()
+		                    			+"',"+directedRoleID+ ")";
+		                    	System.out.println(queryDirectedInsert);
+		                    	con.createStatement().executeQuery(queryDirectedInsert);
+		                    	
+		                    	
+		                    	String queryAllDirected = "";
+		                    	queryAllDirected +=  " INSERT INTO DIRECTED (ClipID,DirectedID,PersonID) ";
+		                    	queryAllDirected += "VALUES (" + clipID + "," + directedRoleID+","+personID+")"; 
+		                    	
+		                    	System.out.println(queryAllDirected);
+		                    	
+		                    	con.createStatement().executeQuery(queryAllDirected);
+	                    	} 
+
+	                    	// Actedchars insert           	
+	                    	for(int j = 0 ; j < Integer.parseInt(actedNb.getText())  ; ++j) {
+	                    		int actedCharsID=-1;
+			                    String queryActed = "SELECT ACTEDID FROM ACTEDCHARS WHERE ";
+			                    String queryActedInsert = "";
+	                    		
+	                    		if(allPactedAddInfo.get(i).get(j).getText().isEmpty()) {
+	                    			queryActed += "AddInfos IS NULL AND ";
+	                    		}else {
+	                    			queryActed += "AddInfos = '" + allPactedAddInfo.get(i).get(j).getText() + "' AND ";
+	                    		}
+	                    		
+	                    		if(allPactedOrderCredit.get(i).get(j).getText().isEmpty()) {
+	                    			queryActed += "OrdersCredit IS NULL AND ";
+	                    		} else {
+	                    			queryActed += "OrdersCredit = '" + allPactedOrderCredit.get(i).get(j).getText()+ "' AND ";
+	                    		}
+	                    		
+	                    		if(allPactedChar.get(i).get(j).getText().isEmpty()) {
+	                    			queryActed += "Chars IS NULL";
+	                    		} else {
+	                    			queryActed += "Chars = '" + allPactedChar.get(i).get(j).getText()+"'";
+	                    		}
+	                    		System.out.println(queryActed);
+	                    		ResultSet rsA = con.createStatement().executeQuery(queryActed);
+	                    		if (!rsA.isBeforeFirst() ) {    
+	                    		    ResultSet rsNew = con.createStatement().executeQuery("(SELECT MAX ( ActedID )+1 AS MAXID From ActedChars)");
+	                    		    while (rsNew.next()) {
+	                    				actedCharsID = rsNew.getInt("MAXID");
+	                       	     	}
+	                    		} else {
+	                    			while (rsA.next()) {
+	                    				actedCharsID = rsA.getInt("ACTEDID");
+	                       	     	}
+	                    		}
+	                    		
+	                    		queryActedInsert += " INSERT INTO ACTEDCHARS (Chars,AddInfos,OrdersCredit, ActedID) ";
+		                    	queryActedInsert += " VALUES ('" + allPactedChar.get(i).get(j).getText()+"','" +allPactedAddInfo.get(i).get(j).getText()
+		                    			+"','" +allPactedOrderCredit.get(i).get(j).getText()+ "',"+actedCharsID+ ")";
+		                    	System.out.println(queryActedInsert);
+		                    	//con.createStatement().executeQuery(queryActedInsert);
+		                    	String queryAllActed = "";
+		                    	queryAllActed +=  " INSERT INTO ACTED (ClipID,DirectedID,PersonID) ";
+		                    	queryAllActed += "VALUES (" + clipID + "," + actedCharsID+","+personID+")"; 
+		                    	System.out.println(queryAllActed);
+	                    		
+                			}
+
+	                    	// ProducedRole insert
+	                    	for(int j = 0 ; j < Integer.parseInt(producedNb.getText()) ; ++j) {
+	                    		
+	                    		int producedRoleID=-1;
+			                    String queryProduced = "SELECT PRODUCEDID FROM PRODUCEDROLE WHERE ";
+			                    String queryProducedInsert = "";
+	                    		
+	                    		if(allPproducedAddInfo.get(i).get(j).getText().isEmpty()) {
+	                    			queryProduced += "AddInfos IS NULL AND ";
+	                    		}else {
+	                    			queryProduced += "AddInfos = '" + allPproducedAddInfo.get(i).get(j).getText() + "' AND ";
+	                    		}
+	                    		
+	                    		if(allPproducedRoles.get(i).get(j).getText().isEmpty()) {
+	                    			queryProduced += "Roles IS NULL";
+	                    		} else {
+	                    			queryProduced += "Roles = '" + allPproducedRoles.get(i).get(j).getText()+"'";
+	                    		}
+	                    		ResultSet rsD = con.createStatement().executeQuery(queryProduced);
+	                    		if (!rsD.isBeforeFirst() ) {    
+	                    		    ResultSet rsNew = con.createStatement().executeQuery("(SELECT MAX ( ProducedID ) +1 AS MAXID From ProducedRole)");
+	                    		    while (rsNew.next()) {
+	                    		    	producedRoleID = rsNew.getInt("MAXID");
+	                       	     	}
+	                    		} else {
+	                    			while (rsD.next()) {
+	                    				producedRoleID = rsD.getInt("PRODUCEDID");
+	                       	     	}
+	                    		}
+	                    		queryProducedInsert += " INSERT INTO PRODUCEDROLE (Roles,AddInfos,ProducedID) ";
+	                    		queryProducedInsert += " VALUES ('" + allPproducedRoles.get(i).get(j).getText()+"','" +allPproducedAddInfo.get(i).get(j).getText()
+		                    			+"',"+producedRoleID+ ")";
+	                    		System.out.println(queryProducedInsert);
+		                    	con.createStatement().executeQuery(queryProducedInsert);
+		                    	
+		                    	String queryAllProduced = "";
+		                    	queryAllProduced +=  " INSERT INTO PRODUCED(ClipID,ProducedID,PersonID) ";
+		                    	queryAllProduced += "VALUES (" + clipID + "," + producedRoleID+","+personID+")"; 
+		                    	System.out.println(queryAllProduced);
+		                    	con.createStatement().executeQuery(queryAllProduced);
+	                    	} 
+	                    	
+	                    	// Wrote insert           	
+	                    	for(int j = 0 ; j < Integer.parseInt(writerNb.getText())  ; ++j) {
+	                    		int wroteRolesID=-1;
+			                    String queryWrote = "SELECT WROTEID FROM WROTEROLE WHERE ";
+			                    String queryWroteInsert = "";
+	                    		
+	                    		if(allPwriterAddInfo.get(i).get(j).getText().isEmpty()) {
+	                    			queryWrote += "AddInfos IS NULL AND ";
+	                    		}else {
+	                    			queryWrote += "AddInfos = '" + allPwriterAddInfo.get(i).get(j).getText() + "' AND ";
+	                    		}
+	                    		
+	                    		if(allPwriterRole.get(i).get(j).getText().isEmpty()) {
+	                    			queryWrote += "Roles IS NULL AND ";
+	                    		} else {
+	                    			queryWrote += "Roles = '" + allPwriterRole.get(i).get(j).getText()+ "' AND ";
+	                    		}
+	                    		
+	                    		if(allPwriterWT.get(i).get(j).getText().isEmpty()) {
+	                    			queryWrote += "WorkTypes IS NULL";
+	                    		} else {
+	                    			queryWrote += "WorkTypes = '" + allPwriterWT.get(i).get(j).getText()+"'";
+	                    		}
+	                    		System.out.println(queryWrote);
+	                    		ResultSet rsA = con.createStatement().executeQuery(queryWrote);
+	                    		if (!rsA.isBeforeFirst() ) {    
+	                    		    ResultSet rsNew = con.createStatement().executeQuery("(SELECT MAX ( WroteID ) +1 AS MAXID From WroteRole)");
+	                    		    while (rsNew.next()) {
+	                    				wroteRolesID = rsNew.getInt("MAXID");
+	                       	     	}
+	                    		} else {
+	                    			while (rsA.next()) {
+	                    				wroteRolesID = rsA.getInt("WROTEID");
+	                       	     	}
+	                    		}
+	                    		
+	                    		queryWroteInsert += " INSERT INTO WROTEROLE (Roles,AddInfos,WorkTypes, WroteID) ";
+	                    		queryWroteInsert += " VALUES ('" + allPwriterRole.get(i).get(j).getText()+"','" +allPwriterAddInfo.get(i).get(j).getText()
+		                    			+"','" +allPwriterWT.get(i).get(j).getText()+ "',"+wroteRolesID+ ")";
+		                    	System.out.println(queryWroteInsert);
+		                    	
+		                    	con.createStatement().executeQuery(queryWroteInsert);
+		                    	
+		                    	String queryAllWrote = "";
+		                    	queryAllWrote +=  " INSERT INTO WROTE (ClipID,WroteID,PersonID) ";
+		                    	queryAllWrote += "VALUES (" + clipID + "," + wroteRolesID+","+personID+")"; 
+		                    	System.out.println(queryAllWrote);
+		                    	con.createStatement().executeQuery(queryAllWrote);
+	                    		
+                			}
+	                  	    
+		              	  	String insertSql3 = "";
+		              	  
+		              	  	insertSql3 += "INSERT INTO Biography (PersonID,DateAndPlaceOfBirth,Height,Biography, biographer,"
+		            	  				+ "dateandcauseofdeath,trivia,personalQuotes,tradeMArk,wherearetheynow) ";
+		              	  	insertSql3 += "VALUES ("+personID+                      ",'"
+		            			  				+allPDPofBirth.get(i).getText() +"','"+allPHeight.get(i).getText()+        "','"
+		            			  				+allPBiography.get(i).getText()+ "','"+allPBiographer.get(i).getText()+    "','"
+		            			  				+allPDCofDeath.get(i).getText()+ "','"+allPTrivia+                         "','"
+		            			  				+allPQuotes.get(i).getText()+    "','"+allPTradeMark.get(i).getText()+     "','"
+		            			  				+ allPWRTfrom.get(i).getText()+  "') ";
+		            	    
+		              	  	System.out.println(insertSql3);
+		            	 	con.createStatement().executeQuery(insertSql3);
+	                    		
+	                    }
                     
-                    
-                    
-                    for(int a = 0; a < allLanguage.size(); ++a) {
-                    	insertSql += " INSERT INTO Languages (Language,ClipID) ";
-                    	insertSql += " VALUES ( '"+allLanguage.get(a).getText()+"' ," +clipID+" ) ";
-                    }
-                    
-                    
-                    for(int a = 0; a < allRTCountryNames.size(); ++a) {
-                    	insertSql += " INSERT INTO RunningTimes ( RunningTime , ReleaseCountry , ClipID ) ";
-                    	insertSql += " VALUES ( "+Integer.toString(Integer.getInteger(allRTRunningTime.get(a).getText()))+",'"+allRTCountryNames.get(a).getText()+"' ," +clipID+" ) ";
-                    	
-                    	
-                    	insertSql += " INSERT INTO Countries (CountryName) ";
-                    	insertSql += " VALUES ( '"+ allRTCountryNames.get(a).getText()+"' ) ";
-                    }
-                    
-                    for(int a = 0; a < allRICountryNames.size(); ++a) {
-                    	insertSql += " INSERT INTO Releaseddates ( CountryName , ReleaseDate , ClipID ) ";
-                    	insertSql += " VALUES ( "+allRICountryNames.get(a).getText()+", TO_DATE("+allRIReleaseDate.get(a).getText()+",'dd.MM.YYYY') ," +clipID+" ) ";
-                    	
-                    	insertSql += " INSERT INTO Countries (CountryName) ";
-                    	insertSql += " VALUES ( '"+ allRICountryNames.get(a).getText()+"' ) ";
-                    }
-                    
-                    for(int a = 0; a < allLinkClip.size(); ++a) {
-                    	insertSql += " INSERT INTO Link ( linkType , ClipTo , ClipFrom ) ";
-                    	insertSql += " VALUES ( '"+allLinkType.get(a).getText()+"' , "+allLinkClip.get(a).getText()+" , " +clipID+" ) ";
-                    }
-                    
-                    
-                    for(int a = 0; a < allCountries.size(); ++a) {
-                    	insertSql += " INSERT INTO RecievedPArticipationFrom ( CountryName , ClipID ) ";
-                    	insertSql += " VALUES ( '"+allCountries.get(a).getText()+"' ," +clipID+" ) ";
-                    	
-                    	
-                    	insertSql += " INSERT INTO Countries (CountryName) ";
-                    	insertSql += " VALUES ( '"+ allCountries.get(a).getText()+"' )";
-                    }
-                    
-                    System.out.println(insertSql);
-                    
-                    ResultSet rs1 = con.createStatement().executeQuery(insertSql);
-                    
-                    // -- people 
-                    
-                    for(int i = 0 ; i < allPNames.size();++i) {
-                    	
-                    String insertSql2 = " INSERT INTO People (PersonID,FullName) ";
-              	    insertSql2 += " VALUES ( (SELECT MAX ( PersonID ) From People ) + 1 , '"
-              	    		   +allPNames.get(i).getText()+"' ) ";
-              	    
-              	  System.out.println(insertSql2);
-              	    ResultSet rs2 = con.createStatement().executeQuery(insertSql2);
-              	    
-              	  String insertSql3 = "";
-            	  String personID = " (SELECT MAX ( PersonID ) From People ) ";
-            	  
-            	  
-            	  insertSql3 += "INSERT INTO Biography (PersonID,DateAndPlaceOfBirth,Height,Biography, biographer,"
-            	  				+ "dateandcauseofdeath,trivia,personalQuotes,tradeMArk,wherearetheynow) ";
-            	  insertSql3 += "VALUES ("+personID+                      ",'"
-            			  				+allPDPofBirth.get(i).getText() +"','"+allPHeight.get(i).getText()+        "','"
-            			  				+allPBiography.get(i).getText()+ "','"+allPBiographer.get(i).getText()+    "','"
-            			  				+allPDCofDeath.get(i).getText()+ "','"+allPTrivia+                         "','"
-            			  				+allPQuotes.get(i).getText()+    "','"+allPTradeMark.get(i).getText()+     "','"
-            			  				+ allPWRTfrom.get(i).getText()+  "') ";
-            	  
-            	  
-              	  
-              	    
-            	  System.out.println(insertSql3);
-            	  ResultSet rs3 = con.createStatement().executeQuery(insertSql3);
-                    	
-                    	
-                    	
-                    }
-                    
-                    
-                    
-                    
-                  	  
+	                    System.out.println("Insert done");
                   	
-                  	
-                  	System.out.println(insertSql);
-                  	
-                    }catch(Exception f){
-                    	
-                        System.out.println("Error : "+f.getMessage());             
-                    }
+                }catch(Exception f){
+                    System.out.println("Error : "+f.getMessage());             
+                }
                     
-                    
-                    
-                    
-                
-                	
-                
+
                 });
                 
                 
