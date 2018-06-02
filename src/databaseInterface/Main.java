@@ -1127,7 +1127,7 @@ public class Main extends Application {
 		              	  	insertSql3 += "VALUES ("+personID+                      ",'"
 		            			  				+allPDPofBirth.get(i).getText() +"','"+allPHeight.get(i).getText()+        "','"
 		            			  				+allPBiography.get(i).getText()+ "','"+allPBiographer.get(i).getText()+    "','"
-		            			  				+allPDCofDeath.get(i).getText()+ "','"+allPTrivia+                         "','"
+		            			  				+allPDCofDeath.get(i).getText()+ "','"+allPTrivia.get(i).getText()+        "','"
 		            			  				+allPQuotes.get(i).getText()+    "','"+allPTradeMark.get(i).getText()+     "','"
 		            			  				+ allPWRTfrom.get(i).getText()+  "') ";
 		            	    
