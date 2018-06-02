@@ -155,6 +155,7 @@ public class Main extends Application {
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void start(Stage mainStage) throws Exception {
 
@@ -201,7 +202,7 @@ public class Main extends Application {
 		Button queryBtn2 = new Button("GO");
 
 		queryBtn.setOnAction(new EventHandler<ActionEvent>() {
-			@SuppressWarnings("rawtypes")
+			
 			@Override
 			public void handle(ActionEvent event) {
 				Stage resultStage = new Stage();
@@ -221,7 +222,7 @@ public class Main extends Application {
 		});
 
 		queryBtn2.setOnAction(new EventHandler<ActionEvent>() {
-			@SuppressWarnings("rawtypes")
+			
 			@Override
 			public void handle(ActionEvent event) {
 				Stage resultStage = new Stage();
@@ -1438,6 +1439,20 @@ public class Main extends Application {
 				String sqlClips = "clips sql";
 				System.out.println(sqlClips);
 				
+				Stage resultStage = new Stage();
+				resultStage.setTitle("Result");
+				resultStage.setX(mainStage.getX() + mainStage.getWidth());
+				// TableView
+
+				tableview = new TableView();
+				buildData(sqlClips);
+
+				// Main Scene
+				Scene scene = new Scene(tableview);
+
+				resultStage.setScene(scene);
+				resultStage.show();
+				
 			});
 			
 			
@@ -1476,6 +1491,21 @@ public class Main extends Application {
 				// TODO : SQL TO SEARCH
 				String sqlPerson = "person sql";
 				System.out.println(sqlPerson);
+				
+				
+					Stage resultStage = new Stage();
+					resultStage.setTitle("Result");
+					resultStage.setX(mainStage.getX() + mainStage.getWidth());
+					// TableView
+
+					tableview = new TableView();
+					buildData(sqlPerson);
+
+					// Main Scene
+					Scene scene = new Scene(tableview);
+
+					resultStage.setScene(scene);
+					resultStage.show();
 				
 			});
 			
