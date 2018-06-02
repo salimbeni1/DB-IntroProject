@@ -1409,7 +1409,7 @@ public class Main extends Application {
 			
 			Button clipSearch = new Button("SEARCH");
 			TextField clipText = new TextField(); clipText.setPromptText("Clip Title");
-			// TODO : SQL TO SEARCH
+			
 			clipsPane.add(clipText, 0, 0);
 			clipsPane.add(clipSearch, 0, 1);
 			
@@ -1421,7 +1421,7 @@ public class Main extends Application {
 			CheckBox directorC = new CheckBox("director");
 			CheckBox writerC = new CheckBox("writer");
 			CheckBox actorC = new CheckBox("actor");
-			CheckBox producerC = new CheckBox("spouse");
+			CheckBox producerC = new CheckBox("producer");
 			CheckBox ratingsC = new CheckBox("ratings");
 			CheckBox linkC = new CheckBox("links");
 			
@@ -1430,6 +1430,14 @@ public class Main extends Application {
 			tClip.getChildren().addAll(generalC,genreC,languageC,RunningTimeC,ReleasedDatesC
 					,directorC,writerC,actorC,producerC,ratingsC,linkC);
 			clipsPane.add(tClip,0,2);
+			
+			clipSearch.setOnAction(clipActionSearch -> {
+				
+				// TODO : SQL TO SEARCH
+				String sqlClips = "clips sql";
+				System.out.println(sqlClips);
+				
+			});
 			
 			
 			
@@ -1442,7 +1450,7 @@ public class Main extends Application {
 			
 			Button personSearch = new Button("SEARCH");
 			TextField personText = new TextField();personText.setPromptText("Person Name");
-			// TODO : SQL TO SEARCH
+			
 			personPane.add(personText, 0, 0);
 			personPane.add(personSearch, 0, 1);
 			
@@ -1456,11 +1464,18 @@ public class Main extends Application {
 			CheckBox directorP = new CheckBox("director");
 			CheckBox writerP = new CheckBox("writer");
 			CheckBox actorP = new CheckBox("actor");
-			CheckBox producerP = new CheckBox("spouse");
+			CheckBox producerP = new CheckBox("producer");
 			CheckBox clipsP = new CheckBox("clips");
 			
 			tPerson.getChildren().addAll(biographyP,nickNameP,spouseP,bioBooksP,salaryP
 					,directorP,writerP,actorP,producerP,clipsP);
+			
+			personSearch.setOnAction( personEventSearch  -> {
+				// TODO : SQL TO SEARCH
+				String sqlPerson = "person sql";
+				System.out.println(sqlPerson);
+				
+			});
 			
 			personPane.add(tPerson,0,2);
 			
