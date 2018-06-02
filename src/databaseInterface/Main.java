@@ -8,8 +8,10 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -23,6 +25,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.TilePane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -1396,6 +1399,8 @@ public class Main extends Application {
 			
 			HBox divider = new HBox();
 			
+			
+			// ---------- clips
 			GridPane clipsPane = new GridPane();
 			clipsPane.setHgap(3);
 			clipsPane.setVgap(10);
@@ -1403,9 +1408,32 @@ public class Main extends Application {
 			
 			
 			Button clipSearch = new Button("SEARCH");
-			clipsPane.add(new Text("Title searc"), 0, 0);
+			TextField clipText = new TextField(); clipText.setPromptText("Clip Title");
+			// TODO : SQL TO SEARCH
+			clipsPane.add(clipText, 0, 0);
 			clipsPane.add(clipSearch, 0, 1);
 			
+			CheckBox generalC = new CheckBox("general");
+			CheckBox genreC = new CheckBox("genre");
+			CheckBox languageC = new CheckBox("language");
+			CheckBox RunningTimeC = new CheckBox("runningT");
+			CheckBox ReleasedDatesC = new CheckBox("releaseD");
+			CheckBox directorC = new CheckBox("director");
+			CheckBox writerC = new CheckBox("writer");
+			CheckBox actorC = new CheckBox("actor");
+			CheckBox producerC = new CheckBox("spouse");
+			CheckBox ratingsC = new CheckBox("ratings");
+			CheckBox linkC = new CheckBox("links");
+			
+			TilePane tClip = new TilePane();tClip.setMaxWidth(170); 
+			tClip.setTileAlignment(Pos.TOP_LEFT);tClip.setHgap(8);
+			tClip.getChildren().addAll(generalC,genreC,languageC,RunningTimeC,ReleasedDatesC
+					,directorC,writerC,actorC,producerC,ratingsC,linkC);
+			clipsPane.add(tClip,0,2);
+			
+			
+			
+			// ----------- person
 			
 			GridPane personPane = new GridPane();
 			personPane.setHgap(3);
@@ -1413,8 +1441,30 @@ public class Main extends Application {
 			personPane.setPadding(new Insets(10, 10, 10, 10));
 			
 			Button personSearch = new Button("SEARCH");
-			personPane.add(new Text("Title search"), 0, 0);
+			TextField personText = new TextField();personText.setPromptText("Person Name");
+			// TODO : SQL TO SEARCH
+			personPane.add(personText, 0, 0);
 			personPane.add(personSearch, 0, 1);
+			
+			TilePane tPerson = new TilePane();tPerson.setMaxWidth(170); 
+			tPerson.setTileAlignment(Pos.TOP_LEFT);tPerson.setHgap(8);
+			CheckBox biographyP = new CheckBox("biography");
+			CheckBox nickNameP = new CheckBox("nickName");
+			CheckBox spouseP = new CheckBox("spouse");
+			CheckBox bioBooksP = new CheckBox("bioBooks");
+			CheckBox salaryP = new CheckBox("salary");
+			CheckBox directorP = new CheckBox("director");
+			CheckBox writerP = new CheckBox("writer");
+			CheckBox actorP = new CheckBox("actor");
+			CheckBox producerP = new CheckBox("spouse");
+			CheckBox clipsP = new CheckBox("clips");
+			
+			tPerson.getChildren().addAll(biographyP,nickNameP,spouseP,bioBooksP,salaryP
+					,directorP,writerP,actorP,producerP,clipsP);
+			
+			personPane.add(tPerson,0,2);
+			
+			
 			
 			
 			
