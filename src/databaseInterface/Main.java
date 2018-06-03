@@ -271,11 +271,21 @@ public class Main extends Application {
 				clipType.setPromptText("TV");
 				insDel.add(new Label("Clip Type "), 0, 4);
 				insDel.add(clipType, 1, 4);
+				
+				TextField rating = new TextField();
+				clipType.setPromptText("5.5");
+				insDel.add(new Label("Rating "), 0, 5);
+				insDel.add(rating, 1, 5);
+				
+				TextField votes = new TextField();
+				clipType.setPromptText("5.5");
+				insDel.add(new Label("Votes "), 0, 6);
+				insDel.add(votes, 1, 6);
 
 				// -- Genres Table
 				ArrayList<TextField> allGenres = new ArrayList();
 
-				insDel.add(new Label("nb Genres "), 0, 6);
+				insDel.add(new Label("nb Genres "), 0, 7);
 				TextField genreNb = new TextField("0");
 				genreNb.setPromptText("3");
 				genreNb.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -301,13 +311,13 @@ public class Main extends Application {
 						}
 					}
 				});
-				insDel.add(genreNb, 1, 6);
+				insDel.add(genreNb, 1, 7);
 
 				// -- Language Table
 
 				ArrayList<TextField> allLanguage = new ArrayList();
 
-				insDel.add(new Label("nb Language "), 0, 7);
+				insDel.add(new Label("nb Language "), 0, 8);
 				TextField languageNb = new TextField("0");
 				languageNb.setPromptText("1");
 				languageNb.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -333,14 +343,14 @@ public class Main extends Application {
 						}
 					}
 				});
-				insDel.add(languageNb, 1, 7);
+				insDel.add(languageNb, 1, 8);
 
 				// -- Running Time
 
 				ArrayList<TextField> allRTCountryNames = new ArrayList();
 				ArrayList<TextField> allRTRunningTime = new ArrayList();
 
-				insDel.add(new Label("nb Run. Time "), 0, 8);
+				insDel.add(new Label("nb Run. Time "), 0, 9);
 				TextField RTNb = new TextField("0");
 				RTNb.setPromptText("1");
 				RTNb.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -372,14 +382,14 @@ public class Main extends Application {
 						}
 					}
 				});
-				insDel.add(RTNb, 1, 8);
+				insDel.add(RTNb, 1, 9);
 
 				// -- Released in Table
 
 				ArrayList<TextField> allRICountryNames = new ArrayList();
 				ArrayList<TextField> allRIReleaseDate = new ArrayList();
 
-				insDel.add(new Label("nb Released in "), 0, 9);
+				insDel.add(new Label("nb Released in "), 0, 10);
 				TextField RINb = new TextField("0");
 				RINb.setPromptText("1");
 				RINb.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -411,14 +421,14 @@ public class Main extends Application {
 						}
 					}
 				});
-				insDel.add(RINb, 1, 9);
+				insDel.add(RINb, 1, 10);
 
 				// -- Link Table
 
 				ArrayList<TextField> allLinkClip = new ArrayList();
 				ArrayList<TextField> allLinkType = new ArrayList();
 
-				insDel.add(new Label("nb links "), 0, 10);
+				insDel.add(new Label("nb links "), 0, 11);
 				TextField linkNb = new TextField("0");
 				RINb.setPromptText("1");
 				linkNb.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -450,13 +460,13 @@ public class Main extends Application {
 						}
 					}
 				});
-				insDel.add(linkNb, 1, 10);
+				insDel.add(linkNb, 1, 11);
 
 				// -- Country Table
 
 				ArrayList<TextField> allCountries = new ArrayList();
 
-				insDel.add(new Label("nb parti. from "), 0, 11);
+				insDel.add(new Label("nb parti. from "), 0, 12);
 				TextField countryNb = new TextField("0");
 				countryNb.setPromptText("1");
 				countryNb.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -482,7 +492,7 @@ public class Main extends Application {
 						}
 					}
 				});
-				insDel.add(countryNb, 1, 11);
+				insDel.add(countryNb, 1, 12);
 
 				// -- People
 
@@ -522,7 +532,7 @@ public class Main extends Application {
 				TextField producedNb = new TextField("0");
 				producedNb.setPromptText("1");
 
-				insDel.add(new Label("nb People "), 0, 12);
+				insDel.add(new Label("nb People "), 0, 13);
 				TextField peopleNb = new TextField("0");
 				peopleNb.setPromptText("1");
 				peopleNb.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -793,7 +803,7 @@ public class Main extends Application {
 						}
 					}
 				});
-				insDel.add(peopleNb, 1, 12);
+				insDel.add(peopleNb, 1, 13);
 
 				Button insertBtn = new Button("INSERT");
 				insertBtn.setOnAction((e) -> {
@@ -813,13 +823,19 @@ public class Main extends Application {
 						insertSql0 += " VALUES ( (SELECT MAX ( ClipID ) From Clips ) + 1 ,TO_DATE(" + clipYear.getText()
 								+ ",'YYYY') , '" + clipTitle.getText() + "' , '" + clipType.getText() + "' ) ";
 
-						// ResultSet rs0 = con.createStatement().executeQuery(insertSql0);
+						ResultSet rs0 = con.createStatement().executeQuery(insertSql0);
 						ResultSet rs_clipid = con.createStatement().executeQuery(clipID_query);
 						String clipID = "";
 						while (rs_clipid.next()) {
 							clipID = Integer.toString(rs_clipid.getInt("ClipMax"));
 						}
 						System.out.println(clipID);
+						
+						if(!rating.getText().isEmpty() || !votes.getText().isEmpty()) {
+							insertSql += " INSERT INTO Rating ( rank , ClipID , Votes) ";
+							insertSql += " VALUES ( '" + rating.getText() + "' , " + clipID + ","+votes.getText()+") "; 
+						
+						}
 
 						for (int a = 0; a < allGenres.size(); ++a) {
 							insertSql += " INSERT INTO Genres ( Genre , ClipID ) ";
@@ -1139,42 +1155,28 @@ public class Main extends Application {
 				deleteBtn.setOnAction((e) -> {
 
 					try {
-						/*
-						 * System.out.println("	- INTRO TO DATABSE -");
-						 * Class.forName("oracle.jdbc.driver.OracleDriver");
-						 * System.out.print("Database Connection : "); Connection con =
-						 * DriverManager.getConnection(
-						 * "jdbc:oracle:thin:@//diassrv2.epfl.ch:1521/orcldias.epfl.ch", "DB2018_G35",
-						 * "DB2018_G35"); System.out.println("OK");
-						 */
-						String clipID = "1234"; // TODO : request clipID
+						
+						 System.out.println("	- INTRO TO DATABSE -");
+						 Class.forName("oracle.jdbc.driver.OracleDriver");
+						 System.out.print("Database Connection : "); Connection con =
+						 DriverManager.getConnection(
+						 "jdbc:oracle:thin:@//diassrv2.epfl.ch:1521/orcldias.epfl.ch", "DB2018_G35",
+						 "DB2018_G35"); System.out.println("OK");
+						 
+						String clipID = ""; // TODO : request clipID
+						
+						if(!clipTitle.getText().equals("")) {
+							ResultSet rsCl = con.createStatement().executeQuery("SELECT CLIPID FROM CLIPS WHERE CLIPNAME = "+clipTitle.getText().equals(""));
+							while(rsCl.next()) {
+								clipID = rsCl.getString("CLIPID");
+								break;
+							}
+						}
 
 						String deleteSql = "";
 						Boolean needAnd = false;
-						if (!clipTitle.getText().equals("") || !clipType.getText().equals("")
-								|| !clipYear.getText().equals("")) {
-							deleteSql += "DELETE FROM Clips ";
-							deleteSql += "WHERE ";
-							if (!clipTitle.getText().equals("")) {
-								deleteSql += "ClipTitle = '" + clipTitle.getText() + "' ";
-								needAnd = true;
-							}
-							if (!clipType.getText().equals("")) {
-								if (needAnd)
-									deleteSql += " AND ";
-								deleteSql += "ClipType = '" + clipType.getText() + "' ";
-								needAnd = true;
-							}
-							if (!clipYear.getText().equals("")) {
-								if (needAnd)
-									deleteSql += " AND ";
-								deleteSql += "ClipYear = '" + clipYear.getText() + "' ";
-								needAnd = true;
-							}
-							needAnd = false;
-						}
-
-						for (int a = 0; a < allGenres.size(); ++a) {
+						
+						for (int a = 0; a < Integer.parseInt(genreNb.getText()) ; ++a) {
 							if (!allGenres.get(a).getText().equals("") || !clipID.equals("")) {
 								deleteSql += "DELETE FROM Genres ";
 								deleteSql += "WHERE ";
@@ -1192,7 +1194,7 @@ public class Main extends Application {
 							}
 						}
 
-						for (int a = 0; a < allLanguage.size(); ++a) {
+						for (int a = 0; a < Integer.parseInt(languageNb.getText()); ++a) {
 							if (!allLanguage.get(a).getText().equals("") || !clipID.equals("")) {
 								deleteSql += "DELETE FROM Languages ";
 								deleteSql += "WHERE ";
@@ -1210,7 +1212,7 @@ public class Main extends Application {
 							}
 						}
 
-						for (int a = 0; a < allRTCountryNames.size(); ++a) {
+						for (int a = 0; a < Integer.parseInt(RTNb.getText()); ++a) {
 							if (!allRTRunningTime.get(a).getText().equals("") || !clipID.equals("")
 									|| !allRTCountryNames.get(a).getText().equals("")) {
 								deleteSql += "DELETE FROM RunningTimes ";
@@ -1235,7 +1237,7 @@ public class Main extends Application {
 							}
 						}
 
-						for (int a = 0; a < allRICountryNames.size(); ++a) {
+						for (int a = 0; a < Integer.parseInt(RINb.getText()); ++a) {
 							if (!allRICountryNames.get(a).getText().equals("") || !clipID.equals("")
 									|| !allRIReleaseDate.get(a).getText().equals("")) {
 								deleteSql += "DELETE FROM Releaseddates ";
@@ -1260,7 +1262,7 @@ public class Main extends Application {
 							}
 						}
 
-						for (int a = 0; a < allLinkClip.size(); ++a) {
+						for (int a = 0; a < Integer.parseInt(linkNb.getText()); ++a) {
 							if (!allLinkType.get(a).getText().equals("") || !clipID.equals("")
 									|| !allLinkClip.get(a).getText().equals("")) {
 								deleteSql += "DELETE FROM Link ";
@@ -1285,12 +1287,12 @@ public class Main extends Application {
 							}
 						}
 
-						for (int a = 0; a < allCountries.size(); ++a) {
+						for (int a = 0; a < Integer.parseInt(countryNb.getText()); ++a) {
 							if (!allCountries.get(a).getText().equals("") || !clipID.equals("")) {
-								deleteSql += "DELETE FROM RecievedPArticipationFrom ";
+								deleteSql += "DELETE FROM ReceivedPArticipationFrom ";
 								deleteSql += "WHERE ";
 								if (!allCountries.get(a).getText().equals("")) {
-									deleteSql += "CountryName = '" + allCountries.get(a).getText() + "' ";
+									deleteSql += "ReleaseCountry = '" + allCountries.get(a).getText() + "' ";
 									needAnd = true;
 								}
 								if (!clipID.equals("")) {
@@ -1302,54 +1304,127 @@ public class Main extends Application {
 								needAnd = false;
 							}
 						}
+						
+						if (!rating.getText().equals("") || !votes.getText().equals("")) {
+							deleteSql += "DELETE FROM Ratings ";
+							deleteSql += "WHERE ";
+							if (!rating.getText().equals("")) {
+								deleteSql += "Rank = '" + rating.getText() + "' ";
+								needAnd = true;
+							}
+							if (!clipID.equals("")) {
+								if (needAnd)
+									deleteSql += " AND ";
+								deleteSql += "ClipID = '" + clipID + "' ";
+								needAnd = true;
+							}
+							if (!votes.getText().equals("")) {
+								if (needAnd)
+									deleteSql += " AND ";
+								deleteSql += "Votes = '" + votes.getText() + "' ";
+								needAnd = true;
+							}
+							needAnd = false;
+						}
+						
+						con.createStatement().executeQuery(deleteSql);
+					
+						
+						if (!clipTitle.getText().equals("") || !clipType.getText().equals("")
+								|| !clipYear.getText().equals("")) {
+							deleteSql += "DELETE FROM Clips ";
+							deleteSql += "WHERE ";
+							if (!clipTitle.getText().equals("")) {
+								deleteSql += "ClipTitle = '" + clipTitle.getText() + "' ";
+								needAnd = true;
+							}
+							if (!clipType.getText().equals("")) {
+								if (needAnd)
+									deleteSql += " AND ";
+								deleteSql += "ClipType = '" + clipType.getText() + "' ";
+								needAnd = true;
+							}
+							if (!clipYear.getText().equals("")) {
+								if (needAnd)
+									deleteSql += " AND ";
+								deleteSql += "ClipYear = '" + clipYear.getText() + "' ";
+								needAnd = true;
+							}
+							needAnd = false;
+						}
 
 						System.out.println(deleteSql);
 
-						// ResultSet rs1 = con.createStatement().executeQuery(deleteSql);
+						con.createStatement().executeQuery(deleteSql);
 
 						// -- people
-
-						/*
-						 * for (int i = 0; i < allPNames.size(); ++i) {
-						 * 
-						 * String personID = ""; // TODO : request clipID
-						 * 
-						 * String deleteSql2 = ""; Boolean needAnd2 = false; if
-						 * (!clipTitle.getText().equals("") || !clipType.getText().equals("") ||
-						 * !clipYear.getText().equals("")) { deleteSql += "DELETE FROM People ";
-						 * deleteSql += "WHERE "; if (!clipTitle.getText().equals("")) { deleteSql +=
-						 * "ClipTitle = '" + clipTitle.getText() + "' "; needAnd = true; } if
-						 * (!clipType.getText().equals("")) { if (needAnd) deleteSql += " AND ";
-						 * deleteSql += "ClipType = '" + clipType.getText() + "' "; needAnd = true; } if
-						 * (!clipYear.getText().equals("")) { if (needAnd) deleteSql += " AND ";
-						 * deleteSql += "ClipYear = '" + clipYear.getText() + "' "; needAnd = true; }
-						 * needAnd = false; }
-						 * 
-						 * String insertSql2 = " INSERT INTO People (PersonID,FullName) "; insertSql2 +=
-						 * " VALUES ( (SELECT MAX ( PersonID ) From People ) + 1 , '" +
-						 * allPNames.get(i).getText() + "' ) ";
-						 * 
-						 * System.out.println(insertSql2); ResultSet rs2 =
-						 * con.createStatement().executeQuery(insertSql2);
-						 * 
-						 * String insertSql3 = ""; String personID =
-						 * " (SELECT MAX ( PersonID ) From People ) ";
-						 * 
-						 * insertSql3 +=
-						 * "INSERT INTO Biography (PersonID,DateAndPlaceOfBirth,Height,Biography, biographer,"
-						 * + "dateandcauseofdeath,trivia,personalQuotes,tradeMArk,wherearetheynow) ";
-						 * insertSql3 += "VALUES (" + personID + ",'" + allPDPofBirth.get(i).getText() +
-						 * "','" + allPHeight.get(i).getText() + "','" + allPBiography.get(i).getText()
-						 * + "','" + allPBiographer.get(i).getText() + "','" +
-						 * allPDCofDeath.get(i).getText() + "','" + allPTrivia + "','" +
-						 * allPQuotes.get(i).getText() + "','" + allPTradeMark.get(i).getText() + "','"
-						 * + allPWRTfrom.get(i).getText() + "') ";
-						 * 
-						 * System.out.println(insertSql3); ResultSet rs3 =
-						 * con.createStatement().executeQuery(insertSql3);
-						 * 
-						 * }
-						 */
+						deleteSql = "";
+						String personID = "";
+						for (int i = 0; i < allPNames.size(); ++i) {
+							if(!allPNames.get(i).getText().equals("")) {
+								ResultSet rsPi = con.createStatement().executeQuery("SELECT PERSONID FROM PEOPLE WHERE CLIPNAME = "+allPNames.get(i).getText().equals(""));
+								while(rsPi.next()) {
+									personID = rsPi.getString("PERSONID");
+								}
+								deleteSql += "DELETE FROM PEOPLE WHERE FULLNAME =" + allPNames.get(i).getText();
+							}
+							if(!allPHeight.get(i).getText().equals("") || !allPDPofBirth.get(i).getText().equals("") || !allPBiography.get(i).getText().equals("") ||
+								!allPBiographer.get(i).getText().equals("") || !allPDCofDeath.get(i).getText().equals("") || !allPTrivia.get(i).getText().equals("") ||
+								!allPQuotes.get(i).getText().equals("") || !allPTradeMark.get(i).getText().equals("")) { 
+								deleteSql += "DELETE FROM Clips ";
+								deleteSql += "WHERE ";
+								if (!allPHeight.get(i).getText().equals("")) {
+									if (needAnd)
+										deleteSql += " AND ";
+									deleteSql += "Height = '" + allPHeight.get(i).getText() + "' ";
+									needAnd = true;
+								}
+								if (!allPDPofBirth.get(i).getText().equals("")) {
+									if (needAnd)
+										deleteSql += " AND ";
+									deleteSql += "DateAndPlaceOfBirth = '" + allPDPofBirth.get(i).getText() + "' ";
+									needAnd = true;
+								}
+								if (!allPBiography.get(i).getText().equals("")) {
+									if (needAnd)
+										deleteSql += " AND ";
+									deleteSql += "Biography = '" + allPBiography.get(i).getText() + "' ";
+									needAnd = true;
+								}
+								if (!allPBiographer.get(i).getText().equals("")) {
+									if (needAnd)
+										deleteSql += " AND ";
+									deleteSql += "Biographer = '" + allPBiographer.get(i).getText() + "' ";
+									needAnd = true;
+								}
+								if (!allPDCofDeath.get(i).getText().equals("")) {
+									if (needAnd)
+										deleteSql += " AND ";
+									deleteSql += "DateAndCauseOfDeath = '" +  allPDCofDeath.get(i).getText() + "' ";
+									needAnd = true;
+								}
+								if (!allPTrivia.get(i).getText().equals("")) {
+									if (needAnd)
+										deleteSql += " AND ";
+									deleteSql += "Trivia = '" + clipYear.getText() + "' ";
+									needAnd = true;
+								}
+								if (!allPQuotes.get(i).getText().equals("")) {
+									if (needAnd)
+										deleteSql += " AND ";
+									deleteSql += "PersonalQuotes = '" + allPQuotes.get(i).getText() + "' ";
+									needAnd = true;
+								}
+								if (!allPTradeMark.get(i).getText().equals("")) {
+									if (needAnd)
+										deleteSql += " AND ";
+									deleteSql += "TradeMark = '" + allPTradeMark.get(i).getText() + "' ";
+									needAnd = true;
+								}
+							}
+							con.createStatement().executeQuery(deleteSql);
+							
+						}
 					} catch (Exception f) {
 
 						System.out.println("Error : " + f.getMessage());
