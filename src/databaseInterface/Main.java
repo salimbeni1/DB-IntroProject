@@ -175,14 +175,14 @@ public class Main extends Application {
 		try {
 			Image emoji = new Image(getClass().getResourceAsStream("pervertedEmoji.png"));
 
-			Label intro = new Label("  this is our wonderful GUI");
+			Label intro = new Label("  this is our wonderful\n GUI");
 			ImageView ivIntro = new ImageView(emoji);
 			ivIntro.setFitWidth(30);
 			ivIntro.setFitHeight(30);
 			intro.setGraphic(ivIntro);
 
 			grid.add(intro, 0, 1, 2, 1);
-			Text intro2 = new Text(" - first make sure you are connected\n to our EPFL network :)");
+			Text intro2 = new Text(" - first make sure you are \nconnected to our EPFL\n network :)");
 			grid.add(intro2, 0, 3);
 
 		} catch (Exception e) {
@@ -269,7 +269,7 @@ public class Main extends Application {
 
 				GridPane insDel = new GridPane();
 
-				insDel.add(new Text("insert the data you"), 0, 0, 2, 1);
+				insDel.add(new Text("Insert or delete the data you want"), 0, 0, 2, 1);
 
 				// -- Clip Table
 				TextField clipTitle = new TextField();
@@ -288,7 +288,7 @@ public class Main extends Application {
 				insDel.add(clipType, 1, 4);
 				
 				TextField rating = new TextField();
-				clipType.setPromptText("5.5");
+				rating.setPromptText("5.5");
 				insDel.add(new Label("Rating "), 0, 5);
 				insDel.add(rating, 1, 5);
 				
@@ -838,11 +838,8 @@ public class Main extends Application {
 						insertSql0 += " VALUES ( (SELECT MAX ( ClipID ) From Clips ) + 1 ,TO_DATE(" + clipYear.getText()
 								+ ",'YYYY') , '" + clipTitle.getText() + "' , '" + clipType.getText() + "' ) ";
 
-<<<<<<< HEAD
-						ResultSet rs0 = con.createStatement().executeQuery(insertSql0);
-=======
 						con.createStatement().executeQuery(insertSql0);
->>>>>>> b415bc74d282414c42cc86c988cb5ff30a32d606
+
 						ResultSet rs_clipid = con.createStatement().executeQuery(clipID_query);
 						String clipID = "";
 						while (rs_clipid.next()) {
