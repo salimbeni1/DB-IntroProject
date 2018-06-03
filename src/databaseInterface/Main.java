@@ -169,6 +169,10 @@ public class Main extends Application {
 				Platform.exit();
 			}
 		}));
+		
+		Image emoji = new Image(getClass().getResourceAsStream("pervertedEmoji.png"));
+		
+		mainStage.getIcons().add(emoji);
 
 		mainStage.setTitle("DB-P Team35");
 		
@@ -176,7 +180,7 @@ public class Main extends Application {
 		grid.getColumnConstraints().add(new ColumnConstraints(150));
 		grid.getColumnConstraints().add(new ColumnConstraints(100));
 		try {
-			Image emoji = new Image(getClass().getResourceAsStream("pervertedEmoji.png"));
+			
 
 			Label intro = new Label("  this is our wonderful\n GUI");
 			ImageView ivIntro = new ImageView(emoji);
@@ -219,6 +223,7 @@ public class Main extends Application {
 				Scene scene = new Scene(tableview);
 
 				resultStage.setScene(scene);
+				resultStage.getIcons().add(emoji);
 				resultStage.show();
 			}
 		});
@@ -239,6 +244,7 @@ public class Main extends Application {
 				Scene scene = new Scene(tableview);
 
 				resultStage.setScene(scene);
+				resultStage.getIcons().add(emoji);
 				resultStage.show();
 			}
 		});
@@ -273,7 +279,8 @@ public class Main extends Application {
 				GridPane insDel = new GridPane();
 
 				insDel.add(new Text("Insert or delete the data you want"), 0, 0, 2, 1);
-
+				CheckBox deleteClip = new CheckBox("delete clip");deleteClip.selectedProperty().set(true);
+				
 				// -- Clip Table
 				TextField clipTitle = new TextField();
 				clipTitle.setPromptText("Forest Gump");
@@ -325,6 +332,7 @@ public class Main extends Application {
 							}
 							Scene genreScene = new Scene(genreGrid);
 							genreStage.setScene(genreScene);
+							genreStage.getIcons().add(emoji);
 							genreStage.show();
 						}
 					}
@@ -357,6 +365,7 @@ public class Main extends Application {
 							}
 							Scene languageScene = new Scene(languageGrid);
 							languageStage.setScene(languageScene);
+							languageStage.getIcons().add(emoji);
 							languageStage.show();
 						}
 					}
@@ -396,6 +405,7 @@ public class Main extends Application {
 							}
 							Scene RTScene = new Scene(RTGrid);
 							RTStage.setScene(RTScene);
+							RTStage.getIcons().add(emoji);
 							RTStage.show();
 						}
 					}
@@ -435,6 +445,7 @@ public class Main extends Application {
 							}
 							Scene RIScene = new Scene(RIGrid);
 							RIStage.setScene(RIScene);
+							RIStage.getIcons().add(emoji);
 							RIStage.show();
 						}
 					}
@@ -474,6 +485,7 @@ public class Main extends Application {
 							}
 							Scene linkScene = new Scene(linkGrid);
 							linkStage.setScene(linkScene);
+							linkStage.getIcons().add(emoji);
 							linkStage.show();
 						}
 					}
@@ -506,6 +518,7 @@ public class Main extends Application {
 							}
 							Scene countryScene = new Scene(countryGrid);
 							countryStage.setScene(countryScene);
+							countryStage.getIcons().add(emoji);
 							countryStage.show();
 						}
 					}
@@ -652,6 +665,7 @@ public class Main extends Application {
 											}
 											Scene directedScene = new Scene(directedGrid);
 											directedStage.setScene(directedScene);
+											directedStage.getIcons().add(emoji);
 											directedStage.show();
 										}
 									}
@@ -702,6 +716,7 @@ public class Main extends Application {
 											}
 											Scene producedScene = new Scene(producedGrid);
 											producedStage.setScene(producedScene);
+											producedStage.getIcons().add(emoji);
 											producedStage.show();
 										}
 									}
@@ -755,6 +770,7 @@ public class Main extends Application {
 											}
 											Scene actedScene = new Scene(actedGrid);
 											actedStage.setScene(actedScene);
+											actedStage.getIcons().add(emoji);
 											actedStage.show();
 										}
 									}
@@ -808,6 +824,7 @@ public class Main extends Application {
 											}
 											Scene writerScene = new Scene(writerGrid);
 											writerStage.setScene(writerScene);
+											writerStage.getIcons().add(emoji);
 											writerStage.show();
 										}
 									}
@@ -816,6 +833,7 @@ public class Main extends Application {
 
 								Scene peopleScene = new Scene(peopleGrid);
 								peopleStage.setScene(peopleScene);
+								peopleStage.getIcons().add(emoji);
 								peopleStage.show();
 							}
 						}
@@ -933,7 +951,7 @@ public class Main extends Application {
 						// con.createStatement().executeQuery(insertSql);
 
 						// People tables
-						String query_people = "";
+						//String query_people = "";
 
 						for (int i = 0; i < allPNames.size(); ++i) {
 
@@ -1181,7 +1199,7 @@ public class Main extends Application {
 						 "jdbc:oracle:thin:@//diassrv2.epfl.ch:1521/orcldias.epfl.ch", "DB2018_G35",
 						 "DB2018_G35"); System.out.println("OK");
 						 
-						String clipID = ""; // TODO : request clipID
+						String clipID = "";
 						
 						if(!clipTitle.getText().equals("")) {
 							ResultSet rsCl = con.createStatement().executeQuery("SELECT CLIPID FROM CLIPS WHERE CLIPNAME = "+clipTitle.getText().equals(""));
@@ -1193,6 +1211,13 @@ public class Main extends Application {
 
 						String deleteSql = "";
 						Boolean needAnd = false;
+						
+						if(deleteClip.selectedProperty().get()) {
+							
+							// TODO : delete Clip
+							System.out.println("should be deleting clip ...");
+							
+						}
 						
 						for (int a = 0; a < Integer.parseInt(genreNb.getText()) ; ++a) {
 							if (!allGenres.get(a).getText().equals("") || !clipID.equals("")) {
@@ -1377,6 +1402,8 @@ public class Main extends Application {
 
 						// -- people
 						deleteSql = "";
+						
+						// TODO : use personID if we want to delete other tables of people
 						String personID = "";
 						for (int i = 0; i < allPNames.size(); ++i) {
 							if(!allPNames.get(i).getText().equals("")) {
@@ -1453,7 +1480,7 @@ public class Main extends Application {
 				GridPane grouper = new GridPane();
 				grouper.add(insertBtn, 0, 1);
 				grouper.add(deleteBtn, 1, 1);
-				CheckBox deleteClip = new CheckBox("delete clip");deleteClip.selectedProperty().set(true);
+				// deleteClip defined in top of function
 				grouper.add(deleteClip, 2, 1);
 				grouper.setHgap(10);
 
@@ -1465,6 +1492,7 @@ public class Main extends Application {
 				// Main Scene
 				Scene scene = new Scene(insDel);
 				resultStage.setScene(scene);
+				resultStage.getIcons().add(emoji);
 				resultStage.show();
 			}
 
@@ -1530,6 +1558,7 @@ public class Main extends Application {
 				Scene scene = new Scene(tableview);
 
 				resultStage.setScene(scene);
+				resultStage.getIcons().add(emoji);
 				resultStage.show();
 				
 			});
@@ -1584,6 +1613,7 @@ public class Main extends Application {
 					Scene scene = new Scene(tableview);
 
 					resultStage.setScene(scene);
+					resultStage.getIcons().add(emoji);
 					resultStage.show();
 				
 			});
@@ -1597,6 +1627,7 @@ public class Main extends Application {
 			
 			divider.getChildren().addAll(clipsPane,personPane);
 			searchStage.setScene(new Scene(divider));
+			searchStage.getIcons().add(emoji);
 			searchStage.show();
 			
 		});
@@ -1618,6 +1649,7 @@ public class Main extends Application {
 
 		mainStage.setScene(new Scene(grid));
 		mainStage.setWidth(230);
+		//mainStage.getIcons().add(emoji);
 		mainStage.show();
 
 	}
