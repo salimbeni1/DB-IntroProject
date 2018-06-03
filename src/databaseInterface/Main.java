@@ -1375,7 +1375,8 @@ public class Main extends Application {
 				GridPane grouper = new GridPane();
 				grouper.add(insertBtn, 0, 1);
 				grouper.add(deleteBtn, 1, 1);
-				// grouper.add(new Button("SEARCH"), 2, 1);
+				CheckBox deleteClip = new CheckBox("delete clip");deleteClip.selectedProperty().set(true);
+				grouper.add(deleteClip, 2, 1);
 				grouper.setHgap(10);
 
 				insDel.add(grouper, 0, 15, 2, 1);
