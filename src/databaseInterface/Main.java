@@ -121,13 +121,17 @@ public class Main extends Application {
 			 **********************************/
 			for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
 				// We are using non property style for making dynamic table
-				final int j = i;
+				int j = i;
 				TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i + 1));
 				col.setCellValueFactory(
 						new Callback<CellDataFeatures<ObservableList, String>, ObservableValue<String>>() {
 							@Override
 							public ObservableValue<String> call(CellDataFeatures<ObservableList, String> param) {
-								return new SimpleStringProperty(param.getValue().get(j).toString());
+								try {
+									return new SimpleStringProperty(param.getValue().get(j).toString());
+								}catch (Exception e) {
+									return new SimpleStringProperty("Null");
+								}
 							}
 						});
 
@@ -1491,7 +1495,6 @@ public class Main extends Application {
 			clipsPane.add(clipText, 0, 0);
 			clipsPane.add(clipSearch, 0, 1);
 			
-			CheckBox generalC = new CheckBox("general");
 			CheckBox genreC = new CheckBox("genre");
 			CheckBox languageC = new CheckBox("language");
 			CheckBox RunningTimeC = new CheckBox("runningT");
@@ -1505,34 +1508,84 @@ public class Main extends Application {
 			
 			TilePane tClip = new TilePane();tClip.setMaxWidth(170); 
 			tClip.setTileAlignment(Pos.TOP_LEFT);tClip.setHgap(8);
-			tClip.getChildren().addAll(generalC,genreC,languageC,RunningTimeC,ReleasedDatesC
+			tClip.getChildren().addAll(genreC,languageC,RunningTimeC,ReleasedDatesC
 					,directorC,writerC,actorC,producerC,ratingsC,linkC);
 			clipsPane.add(tClip,0,2);
 			
-			clipSearch.setOnAction(clipActionSearch -> {
+			clipSearch.setOnAction(clipEventSearch -> {						 
+				String sqlQueryClips1 = "WITH TEMP AS (select * "
+										+ "from clips "
+										+ "where cliptitle LIKE '" + clipText.getText() + "%') ";
+				String sqlQueryClips2 = "select TEMP.clipid, TEMP.cliptitle, TEMP.clipyear, TEMP.cliptype ";
+				String sqlQueryClips3 = "";
+				if(genreC.isSelected()) {
+					sqlQueryClips2 += ",genres.genre";
+					sqlQueryClips3 += " LEFT JOIN genres ON genres.clipid = TEMP.clipid";
+				}
+				if(languageC.isSelected()) {
+					sqlQueryClips2 += ",languages.language";
+					sqlQueryClips3 += " LEFT JOIN languages ON languages.clipid = TEMP.clipid";
+				}
+				if(RunningTimeC.isSelected()) {
+					sqlQueryClips2 += ",runningtimes.releasecountry,runningtimes.runningtime";
+					sqlQueryClips3 += " LEFT JOIN runningtimes ON runningtimes.clipid = TEMP.clipid";
+				}
+				if(ReleasedDatesC.isSelected()) {
+					sqlQueryClips2 += ",releaseddates.releasecountry,releaseddates.releasedate";
+					sqlQueryClips3 += " LEFT JOIN releaseddates ON releaseddates.clipid = TEMP.clipid";
+				}
+				if(producerC.isSelected()) {
+					sqlQueryClips2 += ",people.fullname,producedrole.roles, producedrole.addinfos";
+					sqlQueryClips3 += " left join produced on produced.clipid = temp.clipid"
+									+ " left join people on produced.personid = people.personid"
+									+ " left join producedrole on produced.producedid = producedrole.producedid";
+				}
+				if(writerC.isSelected()) {
+					sqlQueryClips2 += ",people.fullname,wroterole.roles,wroterole.worktypes,wroterole.addinfos";
+					sqlQueryClips3 += " left join wrote on wrote.clipid = temp.clipid"
+									+ " left join people on wrote.personid = people.personid"
+									+ " left join wroterole on wrote.wroteid = wroterole.wroteid";
+				}
+				if(directorC.isSelected()) {
+					sqlQueryClips2 += ",people.fullname,directedrole.roles,directedrole.addinfos";
+					sqlQueryClips3 += " left join directed on directed.clipid = temp.clipid"
+									+ " left join people on directed.personid = people.personid"
+									+ " left join directedrole on directed.directedid = directedrole.directedid";
+				}
+				if(actorC.isSelected()) {
+					sqlQueryClips2 += ",people.fullname,actedchars.chars,actedchars.addinfos,actedchars.orderscredit";
+					sqlQueryClips3 += " left join acted on acted.clipid = temp.clipid"
+									+ " left join people on acted.personid = people.personid"
+									+ " left join actedchars on acted.actedid = actedchars.actedid";
+				}
+				if(ratingsC.isSelected()) {
+					sqlQueryClips2 += ",ratings.rank,ratings.votes";
+					sqlQueryClips3 += " LEFT JOIN releaseddates ON releaseddates.clipid = TEMP.clipid";
+				}
+				if(linkC.isSelected()) {
+					sqlQueryClips2 += ",link.clipto,link.linktype";
+					sqlQueryClips3 += " LEFT JOIN link ON link.clipfrom = TEMP.clipid";
+				}
 				
-				// TODO : SQL TO SEARCH
-				String sqlClips = "clips sql";
-				System.out.println(sqlClips);
+				
+				String sqlQueryClips = sqlQueryClips1 + sqlQueryClips2+ " FROM TEMP " + sqlQueryClips3 + " order by clipid asc";
+				
+				System.out.println(sqlQueryClips);
 				
 				Stage resultStage = new Stage();
 				resultStage.setTitle("Result");
 				resultStage.setX(mainStage.getX() + mainStage.getWidth());
+				
 				// TableView
-
 				tableview = new TableView();
-				buildData(sqlClips);
+				buildData(sqlQueryClips);
 
 				// Main Scene
 				Scene scene = new Scene(tableview);
 
 				resultStage.setScene(scene);
 				resultStage.show();
-				
-			});
-			
-			
-			
+			});	
 			// ----------- person
 			
 			GridPane personPane = new GridPane();
@@ -1557,31 +1610,86 @@ public class Main extends Application {
 			CheckBox writerP = new CheckBox("writer");
 			CheckBox actorP = new CheckBox("actor");
 			CheckBox producerP = new CheckBox("producer");
-			CheckBox clipsP = new CheckBox("clips");
 			
 			tPerson.getChildren().addAll(biographyP,nickNameP,spouseP,bioBooksP,salaryP
-					,directorP,writerP,actorP,producerP,clipsP);
+					,directorP,writerP,actorP,producerP);
 			
 			personSearch.setOnAction( personEventSearch  -> {
 				
-				// TODO : SQL TO SEARCH
-				String sqlPerson = "person sql";
-				System.out.println(sqlPerson);
+				String sqlQueryPerson1 = "WITH TEMP AS (select * "
+										+ "from people "
+										+ "where fullname LIKE '%" + personText.getText() + "%') ";
+				String sqlQueryPerson2 = "select TEMP.personid,TEMP.fullname";
+				String sqlQueryPerson3 = "";
+
+				if (biographyP.isSelected()) {
+					sqlQueryPerson2 += ",biography.realname,biography.biography,biography.dateandplaceofbirth,biography.height,biography.biographer,"
+							+ "biography.dateandcauseofdeath,biography.trivia,biography.personalquotes,biography.wherearetheynow,biography.trademark";
+					sqlQueryPerson3 += " LEFT JOIN biography ON biography.personid = TEMP.personid";
+				}
 				
+				if (nickNameP.isSelected()) {
+					sqlQueryPerson2 += ",nickname.nickname";
+					sqlQueryPerson3 += " LEFT JOIN nickname ON nickname.personid = TEMP.personid";
+				}
 				
-					Stage resultStage = new Stage();
-					resultStage.setTitle("Result");
-					resultStage.setX(mainStage.getX() + mainStage.getWidth());
-					// TableView
+				if (spouseP.isSelected()) {
+					sqlQueryPerson2 += ",spouse.spouse";
+					sqlQueryPerson3 += " LEFT JOIN spouse ON spouse.personid = TEMP.personid";
+				}
+				
+				if (bioBooksP.isSelected()) {
+					sqlQueryPerson2 += ",biographicalbooks.biographicalbooks";
+					sqlQueryPerson3 += " LEFT JOIN biographicalbooks ON biographicalbooks.personid = TEMP.personid";
+				}
+				
+				if (salaryP.isSelected()) {
+					sqlQueryPerson2 += ",salary.clipname,salary.salary,salary.year";
+					sqlQueryPerson3 += " LEFT JOIN salary ON salary.personid = TEMP.personid";
+				}
+				
+				if(actorP.isSelected()) {
+					sqlQueryPerson2 += ",clips.cliptitle,actedchars.chars,actedchars.addinfos,actedchars.orderscredit";
+					sqlQueryPerson3 += " left join acted on acted.personid = temp.personid"
+									+ " left join clips on clips.clipid = acted.clipid"
+									+ " left join actedchars on acted.actedid = actedchars.actedid";
+				}
+				
+				if(producerP.isSelected()) {
+					sqlQueryPerson2 += ",clips.cliptitle,producedrole.roles, producedrole.addinfos";
+					sqlQueryPerson3 += " left join produced on produced.personid = temp.personid"
+									+ " left join clips on clips.clipid = produced.personid"
+									+ " left join producedrole on produced.producedid = producedrole.producedid";
+				}
+				if(writerP.isSelected()) {
+					sqlQueryPerson2 += ",clips.cliptitle,wroterole.roles,wroterole.worktypes,wroterole.addinfos";
+					sqlQueryPerson3 += " left join wrote on wrote.personid = temp.personid"
+									+ " left join clips on clips.clipid = wrote.personid"
+									+ " left join wroterole on wrote.wroteid = wroterole.wroteid";
+				}
+				if(directorP.isSelected()) {
+					sqlQueryPerson2 += ",clips.cliptitle,directedrole.roles,directedrole.addinfos";
+					sqlQueryPerson3 += " left join directed on directed.personid = temp.personid"
+									+ " left join clips on clips.clipid = directed.personid"
+									+ " left join directedrole on directed.directedid = directedrole.directedid";
+				}
+				
+				String sqlQueryPerson = sqlQueryPerson1 + sqlQueryPerson2 + " FROM TEMP " + sqlQueryPerson3 + " order by temp.personid ASC";
+				System.out.println(sqlQueryPerson);
+				
+				Stage resultStage = new Stage();
+				resultStage.setTitle("Result");
+				resultStage.setX(mainStage.getX() + mainStage.getWidth());
+				// TableView
 
-					tableview = new TableView();
-					buildData(sqlPerson);
+				tableview = new TableView();
+				buildData(sqlQueryPerson);
 
-					// Main Scene
-					Scene scene = new Scene(tableview);
+				// Main Scene
+				Scene scene = new Scene(tableview);
 
-					resultStage.setScene(scene);
-					resultStage.show();
+				resultStage.setScene(scene);
+				resultStage.show();
 				
 			});
 			
