@@ -307,7 +307,7 @@ public class Main extends Application {
 				insDel.add(rating, 1, 5);
 				
 				TextField votes = new TextField();
-				clipType.setPromptText("5.5");
+				votes.setPromptText("100");
 				insDel.add(new Label("Votes "), 0, 6);
 				insDel.add(votes, 1, 6);
 
@@ -1196,7 +1196,7 @@ public class Main extends Application {
 
 					try {
 						
-						 System.out.println("	- INTRO TO DATABSE -");
+						 System.out.println("	- INTRO TO DATABASE -");
 						 Class.forName("oracle.jdbc.driver.OracleDriver");
 						 System.out.print("Database Connection : "); Connection con =
 						 DriverManager.getConnection(
@@ -1204,9 +1204,8 @@ public class Main extends Application {
 						 "DB2018_G35"); System.out.println("OK");
 						 
 						String clipID = "";
-						
 						if(!clipTitle.getText().equals("")) {
-							ResultSet rsCl = con.createStatement().executeQuery("SELECT CLIPID FROM CLIPS WHERE CLIPNAME = "+clipTitle.getText().equals(""));
+							ResultSet rsCl = con.createStatement().executeQuery("SELECT CLIPID FROM CLIPS WHERE CLIPS.CLIPTITLE = '"+ clipTitle.getText() + "'");
 							while(rsCl.next()) {
 								clipID = rsCl.getString("CLIPID");
 								break;
@@ -1215,14 +1214,7 @@ public class Main extends Application {
 
 						String deleteSql = "";
 						Boolean needAnd = false;
-						
-						if(deleteClip.selectedProperty().get()) {
-							
-							// TODO : delete Clip
-							System.out.println("should be deleting clip ...");
-							
-						}
-						
+
 						for (int a = 0; a < Integer.parseInt(genreNb.getText()) ; ++a) {
 							if (!allGenres.get(a).getText().equals("") || !clipID.equals("")) {
 								deleteSql += "DELETE FROM Genres ";
@@ -1374,11 +1366,13 @@ public class Main extends Application {
 							needAnd = false;
 						}
 						
-						con.createStatement().executeQuery(deleteSql);
-					
+						System.out.println(deleteSql);
+						if (!deleteSql.equals(""))
+							con.createStatement().executeQuery(deleteSql);
+						deleteSql = "";
 						
-						if (!clipTitle.getText().equals("") || !clipType.getText().equals("")
-								|| !clipYear.getText().equals("")) {
+						if ((!clipTitle.getText().equals("") || !clipType.getText().equals("")
+							|| !clipYear.getText().equals("")) && deleteClip.isSelected()) {
 							deleteSql += "DELETE FROM Clips ";
 							deleteSql += "WHERE ";
 							if (!clipTitle.getText().equals("")) {
@@ -1401,22 +1395,57 @@ public class Main extends Application {
 						}
 
 						System.out.println(deleteSql);
-
-						con.createStatement().executeQuery(deleteSql);
+						if (!deleteSql.equals(""))
+							con.createStatement().executeQuery(deleteSql);
 
 						// -- people
 						deleteSql = "";
 						
-						// TODO : use personID if we want to delete other tables of people
 						String personID = "";
 						for (int i = 0; i < allPNames.size(); ++i) {
 							if(!allPNames.get(i).getText().equals("")) {
-								ResultSet rsPi = con.createStatement().executeQuery("SELECT PERSONID FROM PEOPLE WHERE CLIPNAME = "+allPNames.get(i).getText().equals(""));
+								ResultSet rsPi = con.createStatement().executeQuery("SELECT PERSONID FROM PEOPLE WHERE FULLNAME = '"+allPNames.get(i).getText() + "'");
 								while(rsPi.next()) {
 									personID = rsPi.getString("PERSONID");
 								}
-								deleteSql += "DELETE FROM PEOPLE WHERE FULLNAME =" + allPNames.get(i).getText();
 							}
+							
+							for(int j = 0; j < Integer.parseInt(producedNb.getText()); j++) {
+								if(!allPproducedAddInfo.get(i).get(j).getText().isEmpty() || !allPproducedRoles.get(i).get(j).getText().isEmpty()) {
+									String deleteJobID = "SELECT from producedid where";
+									String producedID = "";
+									
+									if (!allPproducedAddInfo.get(i).get(j).getText().isEmpty()) {
+										deleteJobID += allPproducedAddInfo.get(i).get(j).getText() + " AND ";
+									}
+									if (!allPproducedAddInfo.get(i).get(j).getText().isEmpty()) {
+										deleteJobID += allPproducedRoles.get(i).get(j).getText();
+									}
+									ResultSet rs = con.createStatement().executeQuery(deleteJobID);
+									
+									while(rs.next()) {
+										producedID = rs.getString("PRODUCEDID");
+									}
+									deleteSql = "DELETE FROM PRODUCED WHERE producedID = "+producedID+ " AND clipid = "+ clipID +" AND personid = " + personID;
+									deleteJobID=deleteJobID.replace("SELECT","DELETE");
+									
+									con.createStatement().executeQuery(deleteSql);
+									
+									con.createStatement().executeQuery(deleteJobID);
+									System.out.println(deleteJobID);
+									System.out.println(deleteSql);
+									deleteJobID = "";
+								} else {
+									deleteSql = "DELETE FROM PRODUCED WHERE personid = "+personID+ " AND clipid = "+ clipID;
+									con.createStatement().executeQuery(deleteSql);
+									
+
+									System.out.println(deleteSql);		
+								}
+								deleteSql = "";
+							}
+								
+							
 							if(!allPHeight.get(i).getText().equals("") || !allPDPofBirth.get(i).getText().equals("") || !allPBiography.get(i).getText().equals("") ||
 								!allPBiographer.get(i).getText().equals("") || !allPDCofDeath.get(i).getText().equals("") || !allPTrivia.get(i).getText().equals("") ||
 								!allPQuotes.get(i).getText().equals("") || !allPTradeMark.get(i).getText().equals("")) { 
@@ -1471,9 +1500,12 @@ public class Main extends Application {
 									needAnd = true;
 								}
 							}
-							con.createStatement().executeQuery(deleteSql);
+							//con.createStatement().executeQuery(deleteSql);
 							
 						}
+						
+						System.out.println("Deletion done");
+						
 					} catch (Exception f) {
 
 						System.out.println("Error : " + f.getMessage());
