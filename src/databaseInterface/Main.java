@@ -283,7 +283,8 @@ public class Main extends Application {
 				GridPane insDel = new GridPane();
 
 				insDel.add(new Text("Insert or delete the data you want"), 0, 0, 2, 1);
-				CheckBox deleteClip = new CheckBox("delete clip");deleteClip.selectedProperty().set(true);
+				CheckBox deleteClip = new CheckBox("Delete clip");
+				deleteClip.selectedProperty().set(false);
 				
 				// -- Clip Table
 				TextField clipTitle = new TextField();
@@ -557,6 +558,8 @@ public class Main extends Application {
 				ArrayList<ArrayList<TextField>> allPwriterAddInfo = new ArrayList<ArrayList<TextField>>();
 				ArrayList<ArrayList<TextField>> allPwriterRole = new ArrayList<ArrayList<TextField>>();
 				ArrayList<ArrayList<TextField>> allPwriterClip = new ArrayList<ArrayList<TextField>>();
+				
+				ArrayList<CheckBox> allDeletePerson = new ArrayList<>();
 
 				TextField directedNb = new TextField("0");
 				directedNb.setPromptText("1");
@@ -578,9 +581,14 @@ public class Main extends Application {
 							for (int i = 0; i < nbPeople; ++i) {
 								Stage peopleStage = new Stage();
 								peopleStage.setTitle("PEOPLE");
-
+									
 								GridPane peopleGrid = new GridPane();
-
+								
+								CheckBox deletePerson = new CheckBox("Delete person");
+								deletePerson.selectedProperty().set(false);
+								peopleGrid.add(deletePerson,1,16);
+								allDeletePerson.add(deletePerson);
+								
 								allPNames.add(new TextField(""));
 								peopleGrid.add(new Label("Full Name *"), 0, 1);
 								peopleGrid.add(allPNames.get(i), 1, 1);
@@ -858,19 +866,38 @@ public class Main extends Application {
 						System.out.println("OK");
 						String insertSql = "";
 						String clipID_query = " (SELECT MAX ( ClipID ) AS ClipMax From Clips ) ";
-
-						String insertSql0 = " INSERT INTO Clips (ClipID,ClipYear,ClipTitle,ClipType) ";
-						insertSql0 += " VALUES ( (SELECT MAX ( ClipID ) From Clips ) + 1 ,TO_DATE(" + clipYear.getText()
-								+ ",'YYYY') , '" + clipTitle.getText() + "' , '" + clipType.getText() + "' ) ";
-
-						con.createStatement().executeQuery(insertSql0);
-
-						ResultSet rs_clipid = con.createStatement().executeQuery(clipID_query);
 						String clipID = "";
-						while (rs_clipid.next()) {
-							clipID = Integer.toString(rs_clipid.getInt("ClipMax"));
+						if(!clipTitle.getText().equals("")) {
+							String queryClip = "Select CLIPID from clips where cliptitle = '" + clipTitle.getText().replace("'", "''") +"'";
+							ResultSet rscl =con.createStatement().executeQuery(queryClip);
+							if(!rscl.isBeforeFirst()) {
+								
+								String insertSql0 = " INSERT INTO Clips (ClipID,ClipYear,ClipTitle,ClipType) ";
+								if(!clipYear.getText().equals("")) {
+									insertSql0 += " VALUES ((SELECT MAX ( ClipID ) From Clips ) + 1 ,TO_DATE(" + clipYear.getText()
+											+ ",'YYYY') , '" + clipTitle.getText().replace("'", "''") + "' , '" + clipType.getText().replace("'", "''") + "' ) ";
+									System.out.println(insertSql0);
+								} else {
+									insertSql0 += " VALUES ((SELECT MAX ( ClipID ) From Clips ) + 1,'','"+ clipTitle.getText().replace("'", "''") +"','" 
+											+ clipType.getText().replace("'", "''") + "' ) ";
+									System.out.println(insertSql0);
+								}
+								con.createStatement().executeQuery(insertSql0);
+								
+								ResultSet rs_clipid = con.createStatement().executeQuery(clipID_query);
+								while (rs_clipid.next()) {
+									clipID = rs_clipid.getString("ClipMax");
+								}
+								
+							} else {
+								while(rscl.next()) {
+									clipID = rscl.getString("CLIPID");
+								}
+							}
 						}
-						System.out.println(clipID);
+						
+						
+						
 						
 						if(!rating.getText().isEmpty() || !votes.getText().isEmpty()) {
 							insertSql += " INSERT INTO Rating ( rank , ClipID , Votes) ";
@@ -880,20 +907,20 @@ public class Main extends Application {
 
 						for (int a = 0; a < allGenres.size(); ++a) {
 							insertSql += " INSERT INTO Genres ( Genre , ClipID ) ";
-							insertSql += " VALUES ( '" + allGenres.get(a).getText() + "' , " + clipID + " ) ";
+							insertSql += " VALUES ( '" + allGenres.get(a).getText().replace("'", "''") + "' , " + clipID + " ) ";
 						}
 
 						for (int a = 0; a < allLanguage.size(); ++a) {
 							insertSql += " INSERT INTO Languages (Language,ClipID) ";
-							insertSql += " VALUES ( '" + allLanguage.get(a).getText() + "' ," + clipID + " ) ";
+							insertSql += " VALUES ( '" + allLanguage.get(a).getText().replace("'", "''") + "' ," + clipID + " ) ";
 						}
 
 						for (int a = 0; a < allRTCountryNames.size(); ++a) {
 
 							insertSql += "INSERT INTO countries (countryname) " + "	SELECT * FROM (SELECT '"
-									+ allRTCountryNames.get(a).getText() + "' from dual) tmp "
+									+ allRTCountryNames.get(a).getText().replace("'", "''") + "' from dual) tmp "
 									+ "WHERE NOT EXISTS (SELECT countryname " + "					FROM countries "
-									+ "					WHERE countryname = '" + allRTCountryNames.get(a).getText()
+									+ "					WHERE countryname = '" + allRTCountryNames.get(a).getText().replace("'", "''")
 									+ "')" + "FETCH FIRST ROW ONLY";
 
 							con.createStatement().executeQuery(insertSql);
@@ -905,39 +932,39 @@ public class Main extends Application {
 
 							insertSql += " INSERT INTO RunningTimes ( RunningTime , ReleaseCountry , ClipID ) ";
 							insertSql += " VALUES ( " + allRTRunningTime.get(a).getText() + ",'"
-									+ allRTCountryNames.get(a).getText() + "' ," + clipID + " ) ";
+									+ allRTCountryNames.get(a).getText().replace("'", "''") + "' ," + clipID + " ) ";
 
 						}
 
 						for (int a = 0; a < allRICountryNames.size(); ++a) {
 
 							insertSql += "INSERT INTO countries (countryname) " + "	SELECT * FROM (SELECT '"
-									+ allRICountryNames.get(a).getText() + "' from dual) tmp "
+									+ allRICountryNames.get(a).getText().replace("'", "''") + "' from dual) tmp "
 									+ "WHERE NOT EXISTS (SELECT countryname " + "					FROM countries "
-									+ "					WHERE countryname = '" + allRICountryNames.get(a).getText()
+									+ "					WHERE countryname = '" + allRICountryNames.get(a).getText().replace("'", "''")
 									+ "')" + "FETCH FIRST ROW ONLY";
 							con.createStatement().executeQuery(insertSql);
 							insertSql = "";
 						}
 						for (int a = 0; a < allRICountryNames.size(); ++a) {
 							insertSql += " INSERT INTO Releaseddates ( ReleaseCountry , ReleaseDate , ClipID ) ";
-							insertSql += " VALUES ( '" + allRICountryNames.get(a).getText() + "', TO_DATE('"
-									+ allRIReleaseDate.get(a).getText() + "','dd.MM.YYYY') ," + clipID + " ) ";
+							insertSql += " VALUES ( '" + allRICountryNames.get(a).getText().replace("'", "''") + "', TO_DATE('"
+									+ allRIReleaseDate.get(a).getText().replace("'", "''") + "','dd.MM.YYYY') ," + clipID + " ) ";
 
 						}
 
 						for (int a = 0; a < allLinkClip.size(); ++a) {
 							insertSql += " INSERT INTO Link ( linkType , ClipTo , ClipFrom ) ";
-							insertSql += " VALUES ( '" + allLinkType.get(a).getText() + "' , "
-									+ allLinkClip.get(a).getText() + " , " + clipID + " ) ";
+							insertSql += " VALUES ( '" + allLinkType.get(a).getText().replace("'", "''") + "' , "
+									+ allLinkClip.get(a).getText().replace("'", "''") + " , " + clipID + " ) ";
 						}
 
 						for (int a = 0; a < allCountries.size(); ++a) {
 
 							insertSql += "INSERT INTO countries (countryname) " + "	SELECT * FROM (SELECT '"
-									+ allCountries.get(a).getText() + "' from dual) tmp "
+									+ allCountries.get(a).getText().replace("'", "''") + "' from dual) tmp "
 									+ "WHERE NOT EXISTS (SELECT countryname " + "					FROM countries "
-									+ "					WHERE countryname = '" + allCountries.get(a).getText() + "')"
+									+ "					WHERE countryname = '" + allCountries.get(a).getText().replace("'", "''") + "')"
 									+ "FETCH FIRST ROW ONLY";
 							con.createStatement().executeQuery(insertSql);
 							insertSql = "";
@@ -946,30 +973,39 @@ public class Main extends Application {
 
 						for (int a = 0; a < allCountries.size(); ++a) {
 							insertSql += " INSERT INTO ReceivedParticipationFrom ( CountryName , ClipID ) ";
-							insertSql += " VALUES ( '" + allCountries.get(a).getText() + "' ," + clipID + " ) ";
+							insertSql += " VALUES ( '" + allCountries.get(a).getText().replace("'", "''") + "' ," + clipID + " ) ";
 
 						}
 
 						System.out.println(insertSql);
-
-						// con.createStatement().executeQuery(insertSql);
+						if(!insertSql.equals(""))
+							con.createStatement().executeQuery(insertSql);
 
 						// People tables
-						//String query_people = "";
 
-						for (int i = 0; i < allPNames.size(); ++i) {
-
-							String insertSql2 = " INSERT INTO People (PersonID,FullName) ";
-							insertSql2 += " VALUES ( (SELECT MAX ( PersonID ) From People ) + 1 , '"
-									+ allPNames.get(i).getText() + "' ) ";
-							con.createStatement().executeQuery(insertSql2);
-
-							System.out.println(insertSql2);
-							String personIDQuery = "(SELECT MAX ( PersonID ) AS MAXID From People )";
-							ResultSet rsPerson = con.createStatement().executeQuery(personIDQuery);
+						for (int i = 0; i < Integer.parseInt(peopleNb.getText()); ++i) {
 							String personID = "";
-							while (rsPerson.next()) {
-								personID = String.valueOf(rsPerson.getInt("MAXID"));
+							if(!allPNames.get(i).getText().equals("")) {
+								String queryClip = "Select PERSONID from PEOPLE where fullname = '" + allPNames.get(i).getText().replace("'", "''") +"'";
+								ResultSet rspid =con.createStatement().executeQuery(queryClip);
+								if(!rspid.isBeforeFirst()) {
+									String insertSql2 = " INSERT INTO People (PersonID,FullName) ";
+									insertSql2 += " VALUES ( (SELECT MAX ( PersonID ) From People ) + 1 , '"
+											+ allPNames.get(i).getText().replace("'", "''") + "' ) ";
+									con.createStatement().executeQuery(insertSql2);
+		
+									System.out.println(insertSql2);
+									String personIDQuery = "(SELECT MAX ( PersonID ) AS MAXID From People )";
+									ResultSet rsPerson = con.createStatement().executeQuery(personIDQuery);		
+									while (rsPerson.next()) {
+										personID = String.valueOf(rsPerson.getInt("MAXID"));
+									}
+								} else {
+									while(rspid.next()) {
+										personID=rspid.getString("PERSONID");
+									}
+									
+								}
 							}
 
 							// DirectedRole insert
@@ -982,14 +1018,14 @@ public class Main extends Application {
 								if (allPDirectedAddInfo.get(i).get(j).getText().isEmpty()) {
 									queryDirected += "AddInfos IS NULL AND ";
 								} else {
-									queryDirected += "AddInfos = '" + allPDirectedAddInfo.get(i).get(j).getText()
+									queryDirected += "AddInfos = '" + allPDirectedAddInfo.get(i).get(j).getText().replace("'", "''")
 											+ "' AND ";
 								}
 
 								if (allPDirectedRoles.get(i).get(j).getText().isEmpty()) {
 									queryDirected += "Roles IS NULL";
 								} else {
-									queryDirected += "Roles = '" + allPDirectedRoles.get(i).get(j).getText() + "'";
+									queryDirected += "Roles = '" + allPDirectedRoles.get(i).get(j).getText().replace("'", "''") + "'";
 								}
 								System.out.println(queryDirected);
 								ResultSet rsD = con.createStatement().executeQuery(queryDirected);
@@ -999,24 +1035,24 @@ public class Main extends Application {
 									while (rsNew.next()) {
 										directedRoleID = rsNew.getInt("MAXID");
 									}
+									
+									queryDirectedInsert += " INSERT INTO DIRECTEDROLE (Roles,AddInfos,DirectedID) ";
+									queryDirectedInsert += " VALUES ('" + allPDirectedRoles.get(i).get(j).getText().replace("'", "''") + "','"
+											+ allPDirectedAddInfo.get(i).get(j).getText().replace("'", "''") + "'," + directedRoleID + ")";
+									System.out.println(queryDirectedInsert);
+									con.createStatement().executeQuery(queryDirectedInsert);
+									
 								} else {
 									while (rsD.next()) {
 										directedRoleID = rsD.getInt("DIRECTEDID");
 									}
 								}
 
-								queryDirectedInsert += " INSERT INTO DIRECTEDROLE (Roles,AddInfos,DirectedID) ";
-								queryDirectedInsert += " VALUES ('" + allPDirectedRoles.get(i).get(j).getText() + "','"
-										+ allPDirectedAddInfo.get(i).get(j).getText() + "'," + directedRoleID + ")";
-								System.out.println(queryDirectedInsert);
-								con.createStatement().executeQuery(queryDirectedInsert);
-
 								String queryAllDirected = "";
 								queryAllDirected += " INSERT INTO DIRECTED (ClipID,DirectedID,PersonID) ";
 								queryAllDirected += "VALUES (" + clipID + "," + directedRoleID + "," + personID + ")";
 
 								System.out.println(queryAllDirected);
-
 								con.createStatement().executeQuery(queryAllDirected);
 							}
 
@@ -1029,20 +1065,20 @@ public class Main extends Application {
 								if (allPactedAddInfo.get(i).get(j).getText().isEmpty()) {
 									queryActed += "AddInfos IS NULL AND ";
 								} else {
-									queryActed += "AddInfos = '" + allPactedAddInfo.get(i).get(j).getText() + "' AND ";
+									queryActed += "AddInfos = '" + allPactedAddInfo.get(i).get(j).getText().replace("'", "''") + "' AND ";
 								}
 
 								if (allPactedOrderCredit.get(i).get(j).getText().isEmpty()) {
 									queryActed += "OrdersCredit IS NULL AND ";
 								} else {
-									queryActed += "OrdersCredit = '" + allPactedOrderCredit.get(i).get(j).getText()
+									queryActed += "OrdersCredit = '" + allPactedOrderCredit.get(i).get(j).getText().replace("'", "''")
 											+ "' AND ";
 								}
 
 								if (allPactedChar.get(i).get(j).getText().isEmpty()) {
 									queryActed += "Chars IS NULL";
 								} else {
-									queryActed += "Chars = '" + allPactedChar.get(i).get(j).getText() + "'";
+									queryActed += "Chars = '" + allPactedChar.get(i).get(j).getText().replace("'", "''") + "'";
 								}
 								System.out.println(queryActed);
 								ResultSet rsA = con.createStatement().executeQuery(queryActed);
@@ -1052,18 +1088,19 @@ public class Main extends Application {
 									while (rsNew.next()) {
 										actedCharsID = rsNew.getInt("MAXID");
 									}
+									
+									queryActedInsert += " INSERT INTO ACTEDCHARS (Chars,AddInfos,OrdersCredit, ActedID) ";
+									queryActedInsert += " VALUES ('" + allPactedChar.get(i).get(j).getText() + "','"
+											+ allPactedAddInfo.get(i).get(j).getText().replace("'", "''") + "','"
+											+ allPactedOrderCredit.get(i).get(j).getText().replace("'", "''") + "'," + actedCharsID + ")";
+									System.out.println(queryActedInsert);
+									con.createStatement().executeQuery(queryActedInsert);
 								} else {
 									while (rsA.next()) {
 										actedCharsID = rsA.getInt("ACTEDID");
 									}
 								}
 
-								queryActedInsert += " INSERT INTO ACTEDCHARS (Chars,AddInfos,OrdersCredit, ActedID) ";
-								queryActedInsert += " VALUES ('" + allPactedChar.get(i).get(j).getText() + "','"
-										+ allPactedAddInfo.get(i).get(j).getText() + "','"
-										+ allPactedOrderCredit.get(i).get(j).getText() + "'," + actedCharsID + ")";
-								System.out.println(queryActedInsert);
-								con.createStatement().executeQuery(queryActedInsert);
 								String queryAllActed = "";
 								queryAllActed += " INSERT INTO ACTED (ClipID,DirectedID,PersonID) ";
 								queryAllActed += "VALUES (" + clipID + "," + actedCharsID + "," + personID + ")";
@@ -1081,14 +1118,14 @@ public class Main extends Application {
 								if (allPproducedAddInfo.get(i).get(j).getText().isEmpty()) {
 									queryProduced += "AddInfos IS NULL AND ";
 								} else {
-									queryProduced += "AddInfos = '" + allPproducedAddInfo.get(i).get(j).getText()
+									queryProduced += "AddInfos = '" + allPproducedAddInfo.get(i).get(j).getText().replace("'", "''")
 											+ "' AND ";
 								}
 
 								if (allPproducedRoles.get(i).get(j).getText().isEmpty()) {
 									queryProduced += "Roles IS NULL";
 								} else {
-									queryProduced += "Roles = '" + allPproducedRoles.get(i).get(j).getText() + "'";
+									queryProduced += "Roles = '" + allPproducedRoles.get(i).get(j).getText().replace("'", "''") + "'";
 								}
 								ResultSet rsD = con.createStatement().executeQuery(queryProduced);
 								if (!rsD.isBeforeFirst()) {
@@ -1097,16 +1134,18 @@ public class Main extends Application {
 									while (rsNew.next()) {
 										producedRoleID = rsNew.getInt("MAXID");
 									}
+									
+									queryProducedInsert += " INSERT INTO PRODUCEDROLE (Roles,AddInfos,ProducedID) ";
+									queryProducedInsert += " VALUES ('" + allPproducedRoles.get(i).get(j).getText().replace("'", "''") + "','"
+											+ allPproducedAddInfo.get(i).get(j).getText().replace("'", "''") + "'," + producedRoleID + ")";
+									System.out.println(queryProducedInsert);
+									con.createStatement().executeQuery(queryProducedInsert);
+									
 								} else {
 									while (rsD.next()) {
 										producedRoleID = rsD.getInt("PRODUCEDID");
 									}
 								}
-								queryProducedInsert += " INSERT INTO PRODUCEDROLE (Roles,AddInfos,ProducedID) ";
-								queryProducedInsert += " VALUES ('" + allPproducedRoles.get(i).get(j).getText() + "','"
-										+ allPproducedAddInfo.get(i).get(j).getText() + "'," + producedRoleID + ")";
-								System.out.println(queryProducedInsert);
-								con.createStatement().executeQuery(queryProducedInsert);
 
 								String queryAllProduced = "";
 								queryAllProduced += " INSERT INTO PRODUCED(ClipID,ProducedID,PersonID) ";
@@ -1124,19 +1163,19 @@ public class Main extends Application {
 								if (allPwriterAddInfo.get(i).get(j).getText().isEmpty()) {
 									queryWrote += "AddInfos IS NULL AND ";
 								} else {
-									queryWrote += "AddInfos = '" + allPwriterAddInfo.get(i).get(j).getText() + "' AND ";
+									queryWrote += "AddInfos = '" + allPwriterAddInfo.get(i).get(j).getText().replace("'", "''") + "' AND ";
 								}
 
 								if (allPwriterRole.get(i).get(j).getText().isEmpty()) {
 									queryWrote += "Roles IS NULL AND ";
 								} else {
-									queryWrote += "Roles = '" + allPwriterRole.get(i).get(j).getText() + "' AND ";
+									queryWrote += "Roles = '" + allPwriterRole.get(i).get(j).getText().replace("'", "''") + "' AND ";
 								}
 
 								if (allPwriterWT.get(i).get(j).getText().isEmpty()) {
 									queryWrote += "WorkTypes IS NULL";
 								} else {
-									queryWrote += "WorkTypes = '" + allPwriterWT.get(i).get(j).getText() + "'";
+									queryWrote += "WorkTypes = '" + allPwriterWT.get(i).get(j).getText().replace("'", "''") + "'";
 								}
 								System.out.println(queryWrote);
 								ResultSet rsA = con.createStatement().executeQuery(queryWrote);
@@ -1146,19 +1185,20 @@ public class Main extends Application {
 									while (rsNew.next()) {
 										wroteRolesID = rsNew.getInt("MAXID");
 									}
+									
+									queryWroteInsert += " INSERT INTO WROTEROLE (Roles,AddInfos,WorkTypes, WroteID) ";
+									queryWroteInsert += " VALUES ('" + allPwriterRole.get(i).get(j).getText().replace("'", "''") + "','"
+											+ allPwriterAddInfo.get(i).get(j).getText().replace("'", "''") + "','"
+											+ allPwriterWT.get(i).get(j).getText().replace("'", "''") + "'," + wroteRolesID + ")";
+									System.out.println(queryWroteInsert);
+
+									con.createStatement().executeQuery(queryWroteInsert);
+									
 								} else {
 									while (rsA.next()) {
 										wroteRolesID = rsA.getInt("WROTEID");
 									}
 								}
-
-								queryWroteInsert += " INSERT INTO WROTEROLE (Roles,AddInfos,WorkTypes, WroteID) ";
-								queryWroteInsert += " VALUES ('" + allPwriterRole.get(i).get(j).getText() + "','"
-										+ allPwriterAddInfo.get(i).get(j).getText() + "','"
-										+ allPwriterWT.get(i).get(j).getText() + "'," + wroteRolesID + ")";
-								System.out.println(queryWroteInsert);
-
-								con.createStatement().executeQuery(queryWroteInsert);
 
 								String queryAllWrote = "";
 								queryAllWrote += " INSERT INTO WROTE (ClipID,WroteID,PersonID) ";
@@ -1167,19 +1207,23 @@ public class Main extends Application {
 								con.createStatement().executeQuery(queryAllWrote);
 
 							}
-
-							String insertSql3 = "";
-
-							insertSql3 += "INSERT INTO Biography (PersonID,DateAndPlaceOfBirth,Height,Biography, biographer,"
-									+ "dateandcauseofdeath,trivia,personalQuotes,tradeMArk,wherearetheynow) ";
-							insertSql3 += "VALUES (" + personID + ",'" + allPDPofBirth.get(i).getText() + "','"
-									+ allPHeight.get(i).getText() + "','" + allPBiography.get(i).getText() + "','"
-									+ allPBiographer.get(i).getText() + "','" + allPDCofDeath.get(i).getText() + "','"
-									+ allPTrivia.get(i).getText() + "','" + allPQuotes.get(i).getText() + "','"
-									+ allPTradeMark.get(i).getText() + "','" + allPWRTfrom.get(i).getText() + "') ";
-
-							System.out.println(insertSql3);
-							con.createStatement().executeQuery(insertSql3);
+							
+							if((!allPHeight.get(i).getText().equals("") || !allPDPofBirth.get(i).getText().equals("") || !allPBiography.get(i).getText().equals("") ||
+							!allPBiographer.get(i).getText().equals("") || !allPDCofDeath.get(i).getText().equals("") || !allPTrivia.get(i).getText().equals("") ||
+							!allPQuotes.get(i).getText().equals("") || !allPTradeMark.get(i).getText().equals(""))) {
+								String insertSql3 = "";
+	
+								insertSql3 += "INSERT INTO Biography (PersonID,DateAndPlaceOfBirth,Height,Biography, biographer,"
+										+ "dateandcauseofdeath,trivia,personalQuotes,tradeMArk,wherearetheynow) ";
+								insertSql3 += "VALUES (" + personID + ",'" + allPDPofBirth.get(i).getText().replace("'", "''") + "','"
+										+ allPHeight.get(i).getText().replace("'", "''") + "','" + allPBiography.get(i).getText().replace("'", "''") + "','"
+										+ allPBiographer.get(i).getText().replace("'", "''") + "','" + allPDCofDeath.get(i).getText().replace("'", "''") + "','"
+										+ allPTrivia.get(i).getText().replace("'", "''") + "','" + allPQuotes.get(i).getText().replace("'", "''") + "','"
+										+ allPTradeMark.get(i).getText().replace("'", "''") + "','" + allPWRTfrom.get(i).getText().replace("'", "''") + "') ";
+	
+								System.out.println(insertSql3);
+								con.createStatement().executeQuery(insertSql3);
+							}
 
 						}
 
@@ -1205,7 +1249,7 @@ public class Main extends Application {
 						 
 						String clipID = "";
 						if(!clipTitle.getText().equals("")) {
-							ResultSet rsCl = con.createStatement().executeQuery("SELECT CLIPID FROM CLIPS WHERE CLIPS.CLIPTITLE = '"+ clipTitle.getText() + "'");
+							ResultSet rsCl = con.createStatement().executeQuery("SELECT CLIPID FROM CLIPS WHERE CLIPS.CLIPTITLE = '"+ clipTitle.getText().replace("'", "''") + "'");
 							while(rsCl.next()) {
 								clipID = rsCl.getString("CLIPID");
 								break;
@@ -1220,7 +1264,7 @@ public class Main extends Application {
 								deleteSql += "DELETE FROM Genres ";
 								deleteSql += "WHERE ";
 								if (!allGenres.get(a).getText().equals("")) {
-									deleteSql += "Genre = '" + allGenres.get(a).getText() + "' ";
+									deleteSql += "Genre = '" + allGenres.get(a).getText().replace("'", "''") + "' ";
 									needAnd = true;
 								}
 								if (!clipID.equals("")) {
@@ -1238,7 +1282,7 @@ public class Main extends Application {
 								deleteSql += "DELETE FROM Languages ";
 								deleteSql += "WHERE ";
 								if (!allLanguage.get(a).getText().equals("")) {
-									deleteSql += "Language = '" + allLanguage.get(a).getText() + "' ";
+									deleteSql += "Language = '" + allLanguage.get(a).getText().replace("'", "''") + "' ";
 									needAnd = true;
 								}
 								if (!clipID.equals("")) {
@@ -1257,7 +1301,7 @@ public class Main extends Application {
 								deleteSql += "DELETE FROM RunningTimes ";
 								deleteSql += "WHERE ";
 								if (!allRTRunningTime.get(a).getText().equals("")) {
-									deleteSql += "RunningTime = '" + allRTRunningTime.get(a).getText() + "' ";
+									deleteSql += "RunningTime = '" + allRTRunningTime.get(a).getText().replace("'", "''") + "' ";
 									needAnd = true;
 								}
 								if (!clipID.equals("")) {
@@ -1282,7 +1326,7 @@ public class Main extends Application {
 								deleteSql += "DELETE FROM Releaseddates ";
 								deleteSql += "WHERE ";
 								if (!allRICountryNames.get(a).getText().equals("")) {
-									deleteSql += "CountryName = '" + allRICountryNames.get(a).getText() + "' ";
+									deleteSql += "CountryName = '" + allRICountryNames.get(a).getText().replace("'", "''") + "' ";
 									needAnd = true;
 								}
 								if (!clipID.equals("")) {
@@ -1294,7 +1338,7 @@ public class Main extends Application {
 								if (!allRIReleaseDate.get(a).getText().equals("")) {
 									if (needAnd)
 										deleteSql += " AND ";
-									deleteSql += "ReleaseDate = '" + allRIReleaseDate.get(a).getText() + "' ";
+									deleteSql += "ReleaseDate = '" + allRIReleaseDate.get(a).getText().replace("'", "''") + "' ";
 									needAnd = true;
 								}
 								needAnd = false;
@@ -1307,7 +1351,7 @@ public class Main extends Application {
 								deleteSql += "DELETE FROM Link ";
 								deleteSql += "WHERE ";
 								if (!allLinkType.get(a).getText().equals("")) {
-									deleteSql += "linkType = '" + allLinkType.get(a).getText() + "' ";
+									deleteSql += "linkType = '" + allLinkType.get(a).getText().replace("'", "''") + "' ";
 									needAnd = true;
 								}
 								if (!clipID.equals("")) {
@@ -1319,7 +1363,7 @@ public class Main extends Application {
 								if (!allLinkClip.get(a).getText().equals("")) {
 									if (needAnd)
 										deleteSql += " AND ";
-									deleteSql += "ClipTo = '" + allLinkClip.get(a).getText() + "' ";
+									deleteSql += "ClipTo = '" + allLinkClip.get(a).getText().replace("'", "''") + "' ";
 									needAnd = true;
 								}
 								needAnd = false;
@@ -1331,7 +1375,7 @@ public class Main extends Application {
 								deleteSql += "DELETE FROM ReceivedPArticipationFrom ";
 								deleteSql += "WHERE ";
 								if (!allCountries.get(a).getText().equals("")) {
-									deleteSql += "ReleaseCountry = '" + allCountries.get(a).getText() + "' ";
+									deleteSql += "ReleaseCountry = '" + allCountries.get(a).getText().replace("'", "''") + "' ";
 									needAnd = true;
 								}
 								if (!clipID.equals("")) {
@@ -1348,7 +1392,7 @@ public class Main extends Application {
 							deleteSql += "DELETE FROM Ratings ";
 							deleteSql += "WHERE ";
 							if (!rating.getText().equals("")) {
-								deleteSql += "Rank = '" + rating.getText() + "' ";
+								deleteSql += "Rank = '" + rating.getText().replace("'", "''") + "' ";
 								needAnd = true;
 							}
 							if (!clipID.equals("")) {
@@ -1371,55 +1415,28 @@ public class Main extends Application {
 							con.createStatement().executeQuery(deleteSql);
 						deleteSql = "";
 						
-						if ((!clipTitle.getText().equals("") || !clipType.getText().equals("")
-							|| !clipYear.getText().equals("")) && deleteClip.isSelected()) {
-							deleteSql += "DELETE FROM Clips ";
-							deleteSql += "WHERE ";
-							if (!clipTitle.getText().equals("")) {
-								deleteSql += "ClipTitle = '" + clipTitle.getText() + "' ";
-								needAnd = true;
-							}
-							if (!clipType.getText().equals("")) {
-								if (needAnd)
-									deleteSql += " AND ";
-								deleteSql += "ClipType = '" + clipType.getText() + "' ";
-								needAnd = true;
-							}
-							if (!clipYear.getText().equals("")) {
-								if (needAnd)
-									deleteSql += " AND ";
-								deleteSql += "ClipYear = '" + clipYear.getText() + "' ";
-								needAnd = true;
-							}
-							needAnd = false;
-						}
-
-						System.out.println(deleteSql);
-						if (!deleteSql.equals(""))
-							con.createStatement().executeQuery(deleteSql);
-
 						// -- people
 						deleteSql = "";
 						
 						String personID = "";
-						for (int i = 0; i < allPNames.size(); ++i) {
+						for (int i = 0; i < Integer.parseInt(peopleNb.getText()); ++i) {
 							if(!allPNames.get(i).getText().equals("")) {
-								ResultSet rsPi = con.createStatement().executeQuery("SELECT PERSONID FROM PEOPLE WHERE FULLNAME = '"+allPNames.get(i).getText() + "'");
+								ResultSet rsPi = con.createStatement().executeQuery("SELECT PERSONID FROM PEOPLE WHERE FULLNAME = '"+allPNames.get(i).getText().replace("'", "''") + "'");
 								while(rsPi.next()) {
 									personID = rsPi.getString("PERSONID");
 								}
 						}
 						
-						for(int j = 0; j < Integer.parseInt(producedNb.getText()); j++) {
+						for(int j = 0; j < Integer.parseInt(producedNb.getText()); ++j) {
 							if(!allPproducedAddInfo.get(i).get(j).getText().isEmpty() || !allPproducedRoles.get(i).get(j).getText().isEmpty()) {
 								String deleteJobID = "SELECT from producedrole where";
 								String producedID = "";
 								
 								if (!allPproducedAddInfo.get(i).get(j).getText().isEmpty()) {
-									deleteJobID += allPproducedAddInfo.get(i).get(j).getText() + " AND ";
+									deleteJobID += allPproducedAddInfo.get(i).get(j).getText().replace("'", "''") + " AND ";
 								}
 								if (!allPproducedAddInfo.get(i).get(j).getText().isEmpty()) {
-									deleteJobID += allPproducedRoles.get(i).get(j).getText();
+									deleteJobID += allPproducedRoles.get(i).get(j).getText().replace("'", "''");
 								}
 								ResultSet rs = con.createStatement().executeQuery(deleteJobID);
 								
@@ -1445,16 +1462,16 @@ public class Main extends Application {
 							deleteSql = "";
 						}
 						
-						for(int j = 0; j < Integer.parseInt(directedNb.getText()); j++) {
+						for(int j = 0; j < Integer.parseInt(directedNb.getText()); ++j) {
 							if(!allPDirectedAddInfo.get(i).get(j).getText().isEmpty() || !allPDirectedRoles.get(i).get(j).getText().isEmpty()) {
 								String deleteJobID = "SELECT from directedrole where";
 								String directedID = "";
 								
 								if (!allPDirectedAddInfo.get(i).get(j).getText().isEmpty()) {
-									deleteJobID += allPDirectedAddInfo.get(i).get(j).getText() + " AND ";
+									deleteJobID += allPDirectedAddInfo.get(i).get(j).getText().replace("'", "''") + " AND ";
 								}
 								if (!allPDirectedRoles.get(i).get(j).getText().isEmpty()) {
-									deleteJobID += allPDirectedRoles.get(i).get(j).getText();
+									deleteJobID += allPDirectedRoles.get(i).get(j).getText().replace("'", "''");
 								}
 								ResultSet rs = con.createStatement().executeQuery(deleteJobID);
 								
@@ -1479,20 +1496,20 @@ public class Main extends Application {
 							deleteSql = "";
 						}
 						
-						for(int j = 0; j < Integer.parseInt(actedNb.getText()); j++) {
+						for(int j = 0; j < Integer.parseInt(actedNb.getText()); ++j) {
 							if(!allPactedAddInfo.get(i).get(j).getText().isEmpty() || !allPactedChar.get(i).get(j).getText().isEmpty()
 								|| !allPactedOrderCredit.get(i).get(j).getText().isEmpty()) {
 								String deleteJobID = "SELECT from actedchars where";
 								String actedID = "";
 								
 								if (!allPactedAddInfo.get(i).get(j).getText().isEmpty()) {
-									deleteJobID += allPactedAddInfo.get(i).get(j).getText() + " AND ";
+									deleteJobID += allPactedAddInfo.get(i).get(j).getText().replace("'", "''") + " AND ";
 								}
 								if (!allPactedChar.get(i).get(j).getText().isEmpty()) {
-									deleteJobID += allPactedChar.get(i).get(j).getText();
+									deleteJobID += allPactedChar.get(i).get(j).getText().replace("'", "''");
 								}
 								if (!allPactedOrderCredit.get(i).get(j).getText().isEmpty()) {
-									deleteJobID += allPactedOrderCredit.get(i).get(j).getText();
+									deleteJobID += allPactedOrderCredit.get(i).get(j).getText().replace("'", "''");
 								}
 								ResultSet rs = con.createStatement().executeQuery(deleteJobID);
 								
@@ -1503,7 +1520,6 @@ public class Main extends Application {
 								deleteJobID=deleteJobID.replace("SELECT","DELETE");
 								
 								con.createStatement().executeQuery(deleteSql);
-								
 								con.createStatement().executeQuery(deleteJobID);
 								System.out.println(deleteJobID);
 								System.out.println(deleteSql);
@@ -1517,7 +1533,7 @@ public class Main extends Application {
 							deleteSql = "";
 						}
 						
-						for(int j = 0; j < Integer.parseInt(writerNb.getText()); j++) {
+						for(int j = 0; j < Integer.parseInt(writerNb.getText()); ++j) {
 							if(!allPwriterAddInfo.get(i).get(j).getText().isEmpty() || !allPwriterWT.get(i).get(j).getText().isEmpty()
 								|| !allPwriterRole.get(i).get(j).getText().isEmpty()) {
 								String deleteJobID = "SELECT from wroterole where";
@@ -1540,17 +1556,17 @@ public class Main extends Application {
 								deleteSql = "DELETE FROM WROTE WHERE WROTEID = "+ wroteID + " AND clipid = "+ clipID +" AND personid = " + personID;
 								deleteJobID=deleteJobID.replace("SELECT","DELETE");
 								
-								con.createStatement().executeQuery(deleteSql);
-								
-								con.createStatement().executeQuery(deleteJobID);
 								System.out.println(deleteJobID);
 								System.out.println(deleteSql);
+								
+								con.createStatement().executeQuery(deleteSql);
+								con.createStatement().executeQuery(deleteJobID);
+
 								deleteJobID = "";
 							} else {
 								deleteSql = "DELETE FROM WROTE WHERE personid = "+ personID + " AND clipid = "+ clipID;
-								con.createStatement().executeQuery(deleteSql);
-								
-								System.out.println(deleteSql);		
+								System.out.println(deleteSql);
+								con.createStatement().executeQuery(deleteSql);				
 							}
 							deleteSql = "";
 						}
@@ -1558,7 +1574,7 @@ public class Main extends Application {
 						if(!allPHeight.get(i).getText().equals("") || !allPDPofBirth.get(i).getText().equals("") || !allPBiography.get(i).getText().equals("") ||
 							!allPBiographer.get(i).getText().equals("") || !allPDCofDeath.get(i).getText().equals("") || !allPTrivia.get(i).getText().equals("") ||
 							!allPQuotes.get(i).getText().equals("") || !allPTradeMark.get(i).getText().equals("")) { 
-							deleteSql += "DELETE FROM Clips ";
+							deleteSql += "DELETE FROM Biography ";
 							deleteSql += "WHERE ";
 							if (!allPHeight.get(i).getText().equals("")) {
 								if (needAnd)
@@ -1575,44 +1591,86 @@ public class Main extends Application {
 							if (!allPBiography.get(i).getText().equals("")) {
 								if (needAnd)
 									deleteSql += " AND ";
-								deleteSql += "Biography = '" + allPBiography.get(i).getText() + "' ";
+								deleteSql += "dbms_lob.substr(Biography,4000) = '" + allPBiography.get(i).getText().replace("'", "''") + "' ";
 								needAnd = true;
 							}
 							if (!allPBiographer.get(i).getText().equals("")) {
 								if (needAnd)
 									deleteSql += " AND ";
-								deleteSql += "Biographer = '" + allPBiographer.get(i).getText() + "' ";
+								deleteSql += "Biographer = '" + allPBiographer.get(i).getText().replace("'", "''") + "' ";
 								needAnd = true;
 							}
 							if (!allPDCofDeath.get(i).getText().equals("")) {
 								if (needAnd)
 									deleteSql += " AND ";
-								deleteSql += "DateAndCauseOfDeath = '" +  allPDCofDeath.get(i).getText() + "' ";
+								deleteSql += "DateAndCauseOfDeath = '" +  allPDCofDeath.get(i).getText().replace("'", "''") + "' ";
 								needAnd = true;
 							}
 							if (!allPTrivia.get(i).getText().equals("")) {
 								if (needAnd)
 									deleteSql += " AND ";
-								deleteSql += "Trivia = '" + clipYear.getText() + "' ";
+								deleteSql += "dbms_lob.substr(Trivia,4000) = '" + allPTrivia.get(i).getText().replace("'", "''") + "' ";
 								needAnd = true;
 							}
 							if (!allPQuotes.get(i).getText().equals("")) {
 								if (needAnd)
 									deleteSql += " AND ";
-								deleteSql += "PersonalQuotes = '" + allPQuotes.get(i).getText() + "' ";
+								deleteSql += "dbms_lob.substr(PersonalQuotes,4000) = '" + allPQuotes.get(i).getText().replace("'", "''") + "' ";
 								needAnd = true;
 							}
 							if (!allPTradeMark.get(i).getText().equals("")) {
 								if (needAnd)
 									deleteSql += " AND ";
-								deleteSql += "TradeMark = '" + allPTradeMark.get(i).getText() + "' ";
+								deleteSql += "dbms_lob.substr(Trademark,4000) = '" + allPTradeMark.get(i).getText().replace("'", "''") + "' ";
 								needAnd = true;
 							}
+							if(!allPNames.get(i).getText().equals("")) {
+								if(needAnd)
+									deleteSql += " AND ";
+								deleteSql += "PersonID = " + personID; 
+							}
+							System.out.println(deleteSql);
+							con.createStatement().executeQuery(deleteSql);
 						}
+						
+						if(allDeletePerson.get(i).isSelected()) {
+							if (!allPNames.get(i).getText().equals("")) {
+								deleteSql += "DELETE FROM People WHERE FULLNAME = '" + allPNames.get(i).getText() +"'";
+								con.createStatement().executeQuery(deleteSql);
+								deleteSql = "";
+							}
+						}
+						
+					}
+					
+					if ((!clipTitle.getText().equals("") || !clipType.getText().equals("")
+						|| !clipYear.getText().equals("")) && deleteClip.isSelected()) {
+						deleteSql += "DELETE FROM Clips ";
+						deleteSql += "WHERE ";
+						if (!clipTitle.getText().equals("")) {
+							deleteSql += "ClipTitle = '" + clipTitle.getText().replaceAll("'", "''") + "' ";
+							needAnd = true;
+						}
+						if (!clipType.getText().equals("")) {
+							if (needAnd)
+								deleteSql += " AND ";
+							deleteSql += "ClipType = '" + clipType.getText() + "' ";
+							needAnd = true;
+						}
+						if (!clipYear.getText().equals("")) {
+							if (needAnd)
+								deleteSql += " AND ";
+							deleteSql += "ClipYear = '" + clipYear.getText() + "' ";
+							needAnd = true;
+						}
+						needAnd = false;
+					}
+					
+					System.out.println(deleteSql);
+					if (!deleteSql.equals(""))
 						con.createStatement().executeQuery(deleteSql);
 						
-					}	
-						System.out.println("Deletion done");
+					System.out.println("Deletion done");
 						
 					} catch (Exception f) {
 						System.out.println("Error : " + f.getMessage());
