@@ -1063,7 +1063,7 @@ public class Main extends Application {
 										+ allPactedAddInfo.get(i).get(j).getText() + "','"
 										+ allPactedOrderCredit.get(i).get(j).getText() + "'," + actedCharsID + ")";
 								System.out.println(queryActedInsert);
-								// con.createStatement().executeQuery(queryActedInsert);
+								con.createStatement().executeQuery(queryActedInsert);
 								String queryAllActed = "";
 								queryAllActed += " INSERT INTO ACTED (ClipID,DirectedID,PersonID) ";
 								queryAllActed += "VALUES (" + clipID + "," + actedCharsID + "," + personID + ")";
@@ -1408,106 +1408,213 @@ public class Main extends Application {
 								while(rsPi.next()) {
 									personID = rsPi.getString("PERSONID");
 								}
-							}
-							
-							for(int j = 0; j < Integer.parseInt(producedNb.getText()); j++) {
-								if(!allPproducedAddInfo.get(i).get(j).getText().isEmpty() || !allPproducedRoles.get(i).get(j).getText().isEmpty()) {
-									String deleteJobID = "SELECT from producedid where";
-									String producedID = "";
-									
-									if (!allPproducedAddInfo.get(i).get(j).getText().isEmpty()) {
-										deleteJobID += allPproducedAddInfo.get(i).get(j).getText() + " AND ";
-									}
-									if (!allPproducedAddInfo.get(i).get(j).getText().isEmpty()) {
-										deleteJobID += allPproducedRoles.get(i).get(j).getText();
-									}
-									ResultSet rs = con.createStatement().executeQuery(deleteJobID);
-									
-									while(rs.next()) {
-										producedID = rs.getString("PRODUCEDID");
-									}
-									deleteSql = "DELETE FROM PRODUCED WHERE producedID = "+producedID+ " AND clipid = "+ clipID +" AND personid = " + personID;
-									deleteJobID=deleteJobID.replace("SELECT","DELETE");
-									
-									con.createStatement().executeQuery(deleteSql);
-									
-									con.createStatement().executeQuery(deleteJobID);
-									System.out.println(deleteJobID);
-									System.out.println(deleteSql);
-									deleteJobID = "";
-								} else {
-									deleteSql = "DELETE FROM PRODUCED WHERE personid = "+personID+ " AND clipid = "+ clipID;
-									con.createStatement().executeQuery(deleteSql);
-									
-
-									System.out.println(deleteSql);		
-								}
-								deleteSql = "";
-							}
-								
-							
-							if(!allPHeight.get(i).getText().equals("") || !allPDPofBirth.get(i).getText().equals("") || !allPBiography.get(i).getText().equals("") ||
-								!allPBiographer.get(i).getText().equals("") || !allPDCofDeath.get(i).getText().equals("") || !allPTrivia.get(i).getText().equals("") ||
-								!allPQuotes.get(i).getText().equals("") || !allPTradeMark.get(i).getText().equals("")) { 
-								deleteSql += "DELETE FROM Clips ";
-								deleteSql += "WHERE ";
-								if (!allPHeight.get(i).getText().equals("")) {
-									if (needAnd)
-										deleteSql += " AND ";
-									deleteSql += "Height = '" + allPHeight.get(i).getText() + "' ";
-									needAnd = true;
-								}
-								if (!allPDPofBirth.get(i).getText().equals("")) {
-									if (needAnd)
-										deleteSql += " AND ";
-									deleteSql += "DateAndPlaceOfBirth = '" + allPDPofBirth.get(i).getText() + "' ";
-									needAnd = true;
-								}
-								if (!allPBiography.get(i).getText().equals("")) {
-									if (needAnd)
-										deleteSql += " AND ";
-									deleteSql += "Biography = '" + allPBiography.get(i).getText() + "' ";
-									needAnd = true;
-								}
-								if (!allPBiographer.get(i).getText().equals("")) {
-									if (needAnd)
-										deleteSql += " AND ";
-									deleteSql += "Biographer = '" + allPBiographer.get(i).getText() + "' ";
-									needAnd = true;
-								}
-								if (!allPDCofDeath.get(i).getText().equals("")) {
-									if (needAnd)
-										deleteSql += " AND ";
-									deleteSql += "DateAndCauseOfDeath = '" +  allPDCofDeath.get(i).getText() + "' ";
-									needAnd = true;
-								}
-								if (!allPTrivia.get(i).getText().equals("")) {
-									if (needAnd)
-										deleteSql += " AND ";
-									deleteSql += "Trivia = '" + clipYear.getText() + "' ";
-									needAnd = true;
-								}
-								if (!allPQuotes.get(i).getText().equals("")) {
-									if (needAnd)
-										deleteSql += " AND ";
-									deleteSql += "PersonalQuotes = '" + allPQuotes.get(i).getText() + "' ";
-									needAnd = true;
-								}
-								if (!allPTradeMark.get(i).getText().equals("")) {
-									if (needAnd)
-										deleteSql += " AND ";
-									deleteSql += "TradeMark = '" + allPTradeMark.get(i).getText() + "' ";
-									needAnd = true;
-								}
-							}
-							//con.createStatement().executeQuery(deleteSql);
-							
 						}
 						
+						for(int j = 0; j < Integer.parseInt(producedNb.getText()); j++) {
+							if(!allPproducedAddInfo.get(i).get(j).getText().isEmpty() || !allPproducedRoles.get(i).get(j).getText().isEmpty()) {
+								String deleteJobID = "SELECT from producedrole where";
+								String producedID = "";
+								
+								if (!allPproducedAddInfo.get(i).get(j).getText().isEmpty()) {
+									deleteJobID += allPproducedAddInfo.get(i).get(j).getText() + " AND ";
+								}
+								if (!allPproducedAddInfo.get(i).get(j).getText().isEmpty()) {
+									deleteJobID += allPproducedRoles.get(i).get(j).getText();
+								}
+								ResultSet rs = con.createStatement().executeQuery(deleteJobID);
+								
+								while(rs.next()) {
+									producedID = rs.getString("PRODUCEDID");
+								}
+								deleteSql = "DELETE FROM PRODUCED WHERE producedID = "+producedID+ " AND clipid = "+ clipID +" AND personid = " + personID;
+								deleteJobID=deleteJobID.replace("SELECT","DELETE");
+								
+								con.createStatement().executeQuery(deleteSql);
+								
+								con.createStatement().executeQuery(deleteJobID);
+								System.out.println(deleteJobID);
+								System.out.println(deleteSql);
+								deleteJobID = "";
+							} else {
+								deleteSql = "DELETE FROM PRODUCED WHERE personid = "+personID+ " AND clipid = "+ clipID;
+								con.createStatement().executeQuery(deleteSql);
+								
+
+								System.out.println(deleteSql);		
+							}
+							deleteSql = "";
+						}
+						
+						for(int j = 0; j < Integer.parseInt(directedNb.getText()); j++) {
+							if(!allPDirectedAddInfo.get(i).get(j).getText().isEmpty() || !allPDirectedRoles.get(i).get(j).getText().isEmpty()) {
+								String deleteJobID = "SELECT from directedrole where";
+								String directedID = "";
+								
+								if (!allPDirectedAddInfo.get(i).get(j).getText().isEmpty()) {
+									deleteJobID += allPDirectedAddInfo.get(i).get(j).getText() + " AND ";
+								}
+								if (!allPDirectedRoles.get(i).get(j).getText().isEmpty()) {
+									deleteJobID += allPDirectedRoles.get(i).get(j).getText();
+								}
+								ResultSet rs = con.createStatement().executeQuery(deleteJobID);
+								
+								while(rs.next()) {
+									directedID = rs.getString("DIRECTEDID");
+								}
+								deleteSql = "DELETE FROM DIRECTED WHERE DIRECTEDID = "+ directedID + " AND clipid = "+ clipID +" AND personid = " + personID;
+								deleteJobID=deleteJobID.replace("SELECT","DELETE");
+								
+								con.createStatement().executeQuery(deleteSql);
+								
+								con.createStatement().executeQuery(deleteJobID);
+								System.out.println(deleteJobID);
+								System.out.println(deleteSql);
+								deleteJobID = "";
+							} else {
+								deleteSql = "DELETE FROM DIRECTED WHERE personid = "+ personID + " AND clipid = "+ clipID;
+								con.createStatement().executeQuery(deleteSql);
+								
+								System.out.println(deleteSql);		
+							}
+							deleteSql = "";
+						}
+						
+						for(int j = 0; j < Integer.parseInt(actedNb.getText()); j++) {
+							if(!allPactedAddInfo.get(i).get(j).getText().isEmpty() || !allPactedChar.get(i).get(j).getText().isEmpty()
+								|| !allPactedOrderCredit.get(i).get(j).getText().isEmpty()) {
+								String deleteJobID = "SELECT from actedchars where";
+								String actedID = "";
+								
+								if (!allPactedAddInfo.get(i).get(j).getText().isEmpty()) {
+									deleteJobID += allPactedAddInfo.get(i).get(j).getText() + " AND ";
+								}
+								if (!allPactedChar.get(i).get(j).getText().isEmpty()) {
+									deleteJobID += allPactedChar.get(i).get(j).getText();
+								}
+								if (!allPactedOrderCredit.get(i).get(j).getText().isEmpty()) {
+									deleteJobID += allPactedOrderCredit.get(i).get(j).getText();
+								}
+								ResultSet rs = con.createStatement().executeQuery(deleteJobID);
+								
+								while(rs.next()) {
+									actedID = rs.getString("ACTEDID");
+								}
+								deleteSql = "DELETE FROM ACTED WHERE ACTEDID = "+ actedID + " AND clipid = "+ clipID +" AND personid = " + personID;
+								deleteJobID=deleteJobID.replace("SELECT","DELETE");
+								
+								con.createStatement().executeQuery(deleteSql);
+								
+								con.createStatement().executeQuery(deleteJobID);
+								System.out.println(deleteJobID);
+								System.out.println(deleteSql);
+								deleteJobID = "";
+							} else {
+								deleteSql = "DELETE FROM ACTED WHERE personid = "+ personID + " AND clipid = "+ clipID;
+								con.createStatement().executeQuery(deleteSql);
+								
+								System.out.println(deleteSql);		
+							}
+							deleteSql = "";
+						}
+						
+						for(int j = 0; j < Integer.parseInt(writerNb.getText()); j++) {
+							if(!allPwriterAddInfo.get(i).get(j).getText().isEmpty() || !allPwriterWT.get(i).get(j).getText().isEmpty()
+								|| !allPwriterRole.get(i).get(j).getText().isEmpty()) {
+								String deleteJobID = "SELECT from wroterole where";
+								String wroteID = "";
+								
+								if (!allPwriterAddInfo.get(i).get(j).getText().isEmpty()) {
+									deleteJobID += allPwriterAddInfo.get(i).get(j).getText() + " AND ";
+								}
+								if (!allPwriterWT.get(i).get(j).getText().isEmpty()) {
+									deleteJobID += allPwriterWT.get(i).get(j).getText();
+								}
+								if (!allPwriterRole.get(i).get(j).getText().isEmpty()) {
+									deleteJobID += allPwriterRole.get(i).get(j).getText();
+								}
+								ResultSet rs = con.createStatement().executeQuery(deleteJobID);
+								
+								while(rs.next()) {
+									wroteID = rs.getString("WROTEID");
+								}
+								deleteSql = "DELETE FROM WROTE WHERE WROTEID = "+ wroteID + " AND clipid = "+ clipID +" AND personid = " + personID;
+								deleteJobID=deleteJobID.replace("SELECT","DELETE");
+								
+								con.createStatement().executeQuery(deleteSql);
+								
+								con.createStatement().executeQuery(deleteJobID);
+								System.out.println(deleteJobID);
+								System.out.println(deleteSql);
+								deleteJobID = "";
+							} else {
+								deleteSql = "DELETE FROM WROTE WHERE personid = "+ personID + " AND clipid = "+ clipID;
+								con.createStatement().executeQuery(deleteSql);
+								
+								System.out.println(deleteSql);		
+							}
+							deleteSql = "";
+						}
+							
+						if(!allPHeight.get(i).getText().equals("") || !allPDPofBirth.get(i).getText().equals("") || !allPBiography.get(i).getText().equals("") ||
+							!allPBiographer.get(i).getText().equals("") || !allPDCofDeath.get(i).getText().equals("") || !allPTrivia.get(i).getText().equals("") ||
+							!allPQuotes.get(i).getText().equals("") || !allPTradeMark.get(i).getText().equals("")) { 
+							deleteSql += "DELETE FROM Clips ";
+							deleteSql += "WHERE ";
+							if (!allPHeight.get(i).getText().equals("")) {
+								if (needAnd)
+									deleteSql += " AND ";
+								deleteSql += "Height = '" + allPHeight.get(i).getText() + "' ";
+								needAnd = true;
+							}
+							if (!allPDPofBirth.get(i).getText().equals("")) {
+								if (needAnd)
+									deleteSql += " AND ";
+								deleteSql += "DateAndPlaceOfBirth = '" + allPDPofBirth.get(i).getText() + "' ";
+								needAnd = true;
+							}
+							if (!allPBiography.get(i).getText().equals("")) {
+								if (needAnd)
+									deleteSql += " AND ";
+								deleteSql += "Biography = '" + allPBiography.get(i).getText() + "' ";
+								needAnd = true;
+							}
+							if (!allPBiographer.get(i).getText().equals("")) {
+								if (needAnd)
+									deleteSql += " AND ";
+								deleteSql += "Biographer = '" + allPBiographer.get(i).getText() + "' ";
+								needAnd = true;
+							}
+							if (!allPDCofDeath.get(i).getText().equals("")) {
+								if (needAnd)
+									deleteSql += " AND ";
+								deleteSql += "DateAndCauseOfDeath = '" +  allPDCofDeath.get(i).getText() + "' ";
+								needAnd = true;
+							}
+							if (!allPTrivia.get(i).getText().equals("")) {
+								if (needAnd)
+									deleteSql += " AND ";
+								deleteSql += "Trivia = '" + clipYear.getText() + "' ";
+								needAnd = true;
+							}
+							if (!allPQuotes.get(i).getText().equals("")) {
+								if (needAnd)
+									deleteSql += " AND ";
+								deleteSql += "PersonalQuotes = '" + allPQuotes.get(i).getText() + "' ";
+								needAnd = true;
+							}
+							if (!allPTradeMark.get(i).getText().equals("")) {
+								if (needAnd)
+									deleteSql += " AND ";
+								deleteSql += "TradeMark = '" + allPTradeMark.get(i).getText() + "' ";
+								needAnd = true;
+							}
+						}
+						con.createStatement().executeQuery(deleteSql);
+						
+					}	
 						System.out.println("Deletion done");
 						
 					} catch (Exception f) {
-
 						System.out.println("Error : " + f.getMessage());
 					}
 
