@@ -34,6 +34,8 @@ import javafx.util.Callback;
 import java.sql.*;
 import java.util.ArrayList;
 
+import javax.swing.event.ChangeListener;
+
 // my version 01
 
 public class Main extends Application {
@@ -210,6 +212,22 @@ public class Main extends Application {
 
 		Button queryBtn = new Button("GO");
 		Button queryBtn2 = new Button("GO");
+		
+		TextField queryHText = new TextField();
+		queryHText.setPrefWidth(60);
+		queryHText.setVisible(false);
+		
+
+		cb.showingProperty().addListener((obs, wasShowing, isNowShowing) -> {
+		    if(!obs.getValue()) {
+		    	if(cb.getSelectionModel().getSelectedIndex()==7) {
+		    		queryHText.setVisible(true);
+		    	} else {
+		    		queryHText.setVisible(false);
+		    	}
+		    }
+		});
+		
 
 		queryBtn.setOnAction(new EventHandler<ActionEvent>() {
 			
@@ -219,10 +237,15 @@ public class Main extends Application {
 				resultStage.setTitle("Result");
 				resultStage.setX(mainStage.getX() + mainStage.getWidth());
 				// TableView
-
 				tableview = new TableView();
-				buildData(querries[cb.getSelectionModel().getSelectedIndex()]);
-
+				
+				if(cb.getSelectionModel().getSelectedIndex()==7 && !queryHText.getText().isEmpty()) {
+					String modifiedQueryH = querries[cb.getSelectionModel().getSelectedIndex()].replace("TV", queryHText.getText());
+					buildData(modifiedQueryH);
+				} else {
+					buildData(querries[cb.getSelectionModel().getSelectedIndex()]);
+				}
+				
 				// Main Scene
 				Scene scene = new Scene(tableview);
 
@@ -256,6 +279,7 @@ public class Main extends Application {
 		grid.add(new Label("Predefined Querries Part 2 : "), 0, 7, 2, 1);
 		
 		GridPane group1 = new GridPane();group1.setHgap(10);
+		group1.add(queryHText, 2, 0);
 		group1.add(cb, 0, 0);
 		group1.add(queryBtn, 1, 0);
 		grid.add(group1, 0, 8, 2, 1);
