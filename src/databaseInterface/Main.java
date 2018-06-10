@@ -924,19 +924,24 @@ public class Main extends Application {
 						
 						
 						if(!rating.getText().isEmpty() || !votes.getText().isEmpty()) {
-							insertSql += " INSERT INTO Rating ( rank , ClipID , Votes) ";
-							insertSql += " VALUES ( '" + rating.getText() + "' , " + clipID + ","+votes.getText()+") "; 
+							insertSql += " INSERT INTO Ratings ( rank , ClipID , Votes) ";
+							insertSql += " VALUES ( '" + rating.getText() + "' , " + clipID + ",'"+votes.getText()+"') "; 
 						
 						}
 
 						for (int a = 0; a < allGenres.size(); ++a) {
 							insertSql += " INSERT INTO Genres ( Genre , ClipID ) ";
 							insertSql += " VALUES ( '" + allGenres.get(a).getText().replace("'", "''") + "' , " + clipID + " ) ";
+							
+							con.createStatement().executeQuery(insertSql);
+							insertSql = "";
 						}
 
 						for (int a = 0; a < allLanguage.size(); ++a) {
 							insertSql += " INSERT INTO Languages (Language,ClipID) ";
 							insertSql += " VALUES ( '" + allLanguage.get(a).getText().replace("'", "''") + "' ," + clipID + " ) ";
+							con.createStatement().executeQuery(insertSql);
+							insertSql = "";
 						}
 
 						for (int a = 0; a < allRTCountryNames.size(); ++a) {
@@ -957,6 +962,8 @@ public class Main extends Application {
 							insertSql += " INSERT INTO RunningTimes ( RunningTime , ReleaseCountry , ClipID ) ";
 							insertSql += " VALUES ( " + allRTRunningTime.get(a).getText() + ",'"
 									+ allRTCountryNames.get(a).getText().replace("'", "''") + "' ," + clipID + " ) ";
+							con.createStatement().executeQuery(insertSql);
+							insertSql = "";
 
 						}
 
@@ -974,6 +981,8 @@ public class Main extends Application {
 							insertSql += " INSERT INTO Releaseddates ( ReleaseCountry , ReleaseDate , ClipID ) ";
 							insertSql += " VALUES ( '" + allRICountryNames.get(a).getText().replace("'", "''") + "', TO_DATE('"
 									+ allRIReleaseDate.get(a).getText().replace("'", "''") + "','dd.MM.YYYY') ," + clipID + " ) ";
+							con.createStatement().executeQuery(insertSql);
+							insertSql = "";
 
 						}
 
@@ -981,6 +990,8 @@ public class Main extends Application {
 							insertSql += " INSERT INTO Link ( linkType , ClipTo , ClipFrom ) ";
 							insertSql += " VALUES ( '" + allLinkType.get(a).getText().replace("'", "''") + "' , "
 									+ allLinkClip.get(a).getText().replace("'", "''") + " , " + clipID + " ) ";
+							con.createStatement().executeQuery(insertSql);
+							insertSql = "";
 						}
 
 						for (int a = 0; a < allCountries.size(); ++a) {
@@ -1272,6 +1283,7 @@ public class Main extends Application {
 						 "DB2018_G35"); System.out.println("OK");
 						 
 						String clipID = "";
+						System.out.println(clipTitle.getText());
 						if(!clipTitle.getText().equals("")) {
 							ResultSet rsCl = con.createStatement().executeQuery("SELECT CLIPID FROM CLIPS WHERE CLIPS.CLIPTITLE = '"+ clipTitle.getText().replace("'", "''") + "'");
 							while(rsCl.next()) {
@@ -1684,7 +1696,7 @@ public class Main extends Application {
 						if (!clipYear.getText().equals("")) {
 							if (needAnd)
 								deleteSql += " AND ";
-							deleteSql += "ClipYear = '" + clipYear.getText() + "' ";
+							deleteSql += "ClipYear = TO_DATE('" + clipYear.getText() + "','YYYY') ";
 							needAnd = true;
 						}
 						needAnd = false;
@@ -1871,7 +1883,7 @@ public class Main extends Application {
 				
 				String sqlQueryPerson1 = "WITH TEMP AS (select * "
 										+ "from people "
-										+ "where fullname LIKE '%" + personText.getText() + "%') ";
+										+ "where fullname LIKE '" + personText.getText() + "%') ";
 				String sqlQueryPerson2 = "select TEMP.personid,TEMP.fullname";
 				String sqlQueryPerson3 = "";
 
