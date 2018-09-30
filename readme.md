@@ -1,5 +1,4 @@
-# DATABSE PROJECT
-
+# Database Project
 
 ## GUI
 ![GUI](https://github.com/salimbeni1/DB-IntroProject/blob/master/screenchotGUI.png)
